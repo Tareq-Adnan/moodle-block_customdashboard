@@ -1,0 +1,98 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_customdashboard/dashboard
+
+    Custom Dashboard block template.
+
+    Context variables required for this template:
+    * isparent - Boolean if user is parent
+    * isstudent - Boolean if user is student
+    * isteacher - Boolean if user is teacher
+}}
+
+<div class="block-customdashboard">
+    {{#isparent}}
+    {{! Parent Dashboard }}
+    {{#haschildren}}
+    <div class="child-selector-wrapper mb-3 d-flex align-items-center gap-3">
+        <label for="child-selector" class="form-label mb-0">{{#str}}selectchild, block_customdashboard{{/str}}</label>
+        <select id="child-selector" class="form-select" style="flex: 1;">
+            {{#children}}
+            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{fullname}} ({{email}})</option>
+            {{/children}}
+        </select>
+        <a href="#" id="view-child-profile" class="btn btn-sm btn-primary" title="{{#str}}viewchildprofile, block_customdashboard{{/str}}">
+            {{#pix}}i/user, core{{/pix}} {{#str}}viewdetails, block_customdashboard{{/str}}
+        </a>
+    </div>
+
+    {{! Zoom classes and Teachers sections for selected child }}
+    <div class="row mt-3">
+        <div class="">
+            {{> block_customdashboard/zoom-classes-card }}
+        </div>
+
+        <div class="">
+            {{> block_customdashboard/teachers-card }}
+        </div>
+    </div>
+
+    {{#hascourses}}
+    <div class="courses-container">
+        <h4 class="mb-3">{{#str}}childcourses, block_customdashboard{{/str}}</h4>
+        {{> block_customdashboard/view-cards }}
+    </div>
+    {{/hascourses}}
+
+    {{^hascourses}}
+    <div class="alert alert-info">
+        {{#str}}nocourses, block_customdashboard{{/str}}
+    </div>
+    {{/hascourses}}
+
+    {{/haschildren}}
+    {{/isparent}}
+
+    {{#isstudent}}
+    {{! Student Dashboard }}
+    <div class="student-dashboard">
+        <div class="row">
+            <div class="">
+            {{> block_customdashboard/announcements}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="">
+                {{> block_customdashboard/zoom-classes-card }}
+            </div>
+        </div>
+        <div class="row">
+        <div class="">
+        {{> block_customdashboard/course-activities-card }}
+        </div>
+        </div>
+    </div>
+    {{/isstudent}}
+
+    {{#isteacher}}
+    {{! Teacher Dashboard }}
+    <div class="teacher-dashboard">
+        {{> block_customdashboard/zoom-classes-card }}
+    </div>
+    {{/isteacher}}
+</div>

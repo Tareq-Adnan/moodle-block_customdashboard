@@ -1,0 +1,55 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_customdashboard/course-action-menu
+
+    This template renders action menu for each course.
+
+    Context variables required for this template:
+    * id - Course ID
+    * fullname - Course fullname
+}}
+<div class="ms-auto dropdown">
+    <button class="btn btn-icon coursemenubtn aabtn"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false">
+        <i class="icon fa fa-ellipsis-v fa-fw m-0" title="{{#str}} aria:courseactions, block_customdashboard {{/str}} {{{fullname}}}" aria-hidden="true"></i>
+        <span class="visually-hidden">{{#str}} aria:courseactions, block_customdashboard {{/str}} {{{fullname}}}</span>
+    </button>
+    <div class="dropdown-menu dropdown-menu-end">
+        <a class="dropdown-item view-activities-link" href="#"
+            data-action="view-activities"
+            data-courseid="{{id}}"
+            data-coursename="{{fullname}}">
+            <i class="fa fa-list me-1"></i> {{#str}} viewactivities, block_customdashboard {{/str}}
+            <div class="visually-hidden">
+                {{#str}} aria:viewactivities, block_customdashboard {{/str}} {{{fullname}}}
+            </div>
+        </a>
+        <a class="dropdown-item view-grades-link" href="#"
+            data-action="view-grades"
+            data-courseid="{{id}}"
+            data-coursename="{{fullname}}">
+            <i class="fa fa-chart-bar me-1"></i> {{#str}} viewgrades, block_customdashboard {{/str}}
+            <div class="visually-hidden">
+                {{#str}} aria:viewgrades, block_customdashboard {{/str}} {{{fullname}}}
+            </div>
+        </a>
+    </div>
+</div>

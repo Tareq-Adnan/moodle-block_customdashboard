@@ -1,0 +1,228 @@
+/* Custom Dashboard Block Styles */
+
+.block-customdashboard .child-selector-wrapper {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.block-customdashboard .child-selector-wrapper label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.block-customdashboard .courses-container {
+    margin-top: 15px;
+}
+
+/* Course Card Styles - Matching myoverview */
+.block-customdashboard .course-card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.block-customdashboard .course-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.block-customdashboard .course-card .card-img-top {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    background-color: #e9ecef;
+}
+
+.block-customdashboard .course-card .course-info-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.block-customdashboard .course-card .coursename {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #0f6cbf;
+    text-decoration: none;
+    display: block;
+}
+
+.block-customdashboard .course-card .coursename:hover {
+    text-decoration: underline;
+}
+
+.block-customdashboard .course-card .multiline {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Progress Bar Styles */
+.block-customdashboard .card-footer {
+    background-color: transparent;
+    padding: 0.5rem 1rem;
+}
+
+.block-customdashboard .progress-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+    text-align: left;
+}
+
+.block-customdashboard .progress-area {
+    background-color: rgb(37 161 142 / .16);
+    border-radius: 999px;
+}
+
+.block-customdashboard .progress-bar {
+    height: .6rem;
+    background-image: linear-gradient(to right, #25a18e 0%, #005eb8 100%);
+    border-radius: 999px;
+}
+
+/* Course Action Menu */
+.block-customdashboard .coursemenubtn {
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.block-customdashboard .coursemenubtn:hover {
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+}
+
+.block-customdashboard .dropdown-menu {
+    min-width: 200px;
+}
+
+.block-customdashboard .dropdown-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.block-customdashboard .dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.block-customdashboard .dropdown-item i {
+    width: 20px;
+}
+
+/* Card Grid Layout */
+.block-customdashboard .card-grid {
+    gap: 1rem;
+}
+
+.block-customdashboard .card-grid .col {
+    padding: 0 0.5rem;
+}
+
+/* Alert Styles */
+.block-customdashboard .alert {
+    margin-top: 15px;
+}
+
+/* Teachers List Scrollable */
+.block-customdashboard .teachers-list-container.teachers-scrollable {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.block-customdashboard .teachers-list-container.teachers-scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+
+.block-customdashboard .teachers-list-container.teachers-scrollable::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.block-customdashboard .teachers-list-container.teachers-scrollable::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.block-customdashboard .teachers-list-container.teachers-scrollable::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Zoom Classes Scrollable */
+.block-customdashboard .zoom-classes-scrollable {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.block-customdashboard .zoom-classes-scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+
+.block-customdashboard .zoom-classes-scrollable::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.block-customdashboard .zoom-classes-scrollable::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.block-customdashboard .zoom-classes-scrollable::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .block-customdashboard .course-card .card-img-top {
+        height: 150px;
+    }
+    
+    .block-customdashboard .course-card .coursename {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .block-customdashboard .card-grid .col {
+        padding: 0;
+    }
+    
+    .block-customdashboard .course-card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Activities Scrollable */
+.block-customdashboard .activities-scrollable {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* scrollbar styling (optional but matches your theme) */
+.block-customdashboard .activities-scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+
+.block-customdashboard .activities-scrollable::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.block-customdashboard .activities-scrollable::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.block-customdashboard .activities-scrollable::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

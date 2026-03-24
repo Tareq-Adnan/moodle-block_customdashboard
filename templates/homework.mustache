@@ -1,0 +1,383 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_customdashboard/homework
+
+    TODO describe template homework
+
+    Example context (json):
+    {
+    }
+}}
+{{! Moodle Mustache Template — paste inside your plugin's renderer }}
+{{! Requires Bootstrap 4 (built into Moodle 3.x+) }}
+
+<style>
+.hw-grid-wrap       { padding: 1rem 0; }
+.hw-section-label   { font-size: 11px; font-weight: 600; letter-spacing: .08em;
+                      text-transform: uppercase; color: #6c757d; margin-bottom: .5rem; }
+
+/* Card */
+.hw-card            { background: #fff; border: 1px solid #e9ecef;
+                      border-radius: 14px; padding: 1rem 1.1rem;
+                      display: flex; flex-direction: column; gap: 10px;
+                      transition: box-shadow .15s, border-color .15s; height: 100%; }
+.hw-card:hover      { border-color: #ced4da; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+
+/* Icon pill */
+.hw-icon            { width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+                      display: flex; align-items: center; justify-content: center; }
+.hw-icon i          { font-size: 16px; }
+.icon-asgn          { background: #e8f0fe; color: #1a73e8; }
+.icon-quiz          { background: #fff3e0; color: #e65100; }
+.icon-proj          { background: #ede7f6; color: #6200ea; }
+
+/* Text */
+.hw-course          { font-size: 11px; color: #6c757d; margin: 0;
+                      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hw-title           { font-size: 14px; font-weight: 600; color: #212529;
+                      margin: 0; line-height: 1.35; }
+
+/* Divider */
+.hw-divider         { border: none; border-top: 1px solid #f1f3f5; margin: 0; }
+
+/* Due date */
+.hw-due             { font-size: 12px; color: #6c757d;
+                      display: flex; align-items: center; gap: 4px; }
+.hw-due i           { font-size: 12px; }
+
+/* Status badges */
+.hw-badge           { font-size: 11px; font-weight: 600; padding: 3px 9px;
+                      border-radius: 20px; white-space: nowrap; }
+.badge-todo         { background: #e8f0fe; color: #1558d6; }
+.badge-today        { background: #fff3e0; color: #bf360c; }
+.badge-overdue      { background: #fce8e6; color: #c5221f; }
+.badge-done         { background: #e6f4ea; color: #137333; }
+
+/* Points */
+.hw-pts             { font-size: 11px; color: #6c757d; }
+.hw-score           { font-size: 13px; font-weight: 600; color: #137333; }
+
+/* Action button */
+.hw-btn             { width: 100%; padding: 7px 12px; border-radius: 8px; margin-top: auto;
+                      border: 1px solid #dee2e6; background: transparent;
+                      color: #495057; font-size: 13px; font-weight: 500;
+                      cursor: pointer; display: flex; align-items: center;
+                      justify-content: center; gap: 6px;
+                      transition: background .15s, border-color .15s; }
+.hw-btn:hover       { background: #f8f9fa; border-color: #ced4da; }
+.hw-btn i           { font-size: 13px; }
+.hw-btn-done        { background: #e6f4ea; border-color: #a8d5b5; color: #137333; }
+.hw-btn-done:hover  { background: #ceead6; }
+.hw-btn-overdue     { background: #fce8e6; border-color: #f5c6c5; color: #c5221f; }
+.hw-btn-overdue:hover { background: #f5c6c5; }
+</style>
+
+<!-- Font Awesome (only if not already loaded by your theme) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<div class="hw-grid-wrap">
+
+  <!-- ── SECTION: Needs Attention ── -->
+  <p class="hw-section-label">
+    <i class="fa fa-circle-exclamation me-1" style="color:#e65100;font-size:10px;"></i>
+    Needs attention
+  </p>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 mb-4">
+
+    <!-- Overdue card -->
+    <div class="col">
+      <div class="hw-card">
+        <div class="d-flex align-items-center gap-2">
+          <div class="hw-icon icon-asgn"><i class="fa fa-file-lines"></i></div>
+          <div class="overflow-hidden">
+            <p class="hw-course">Data Structures · CSE 301</p>
+            <p class="hw-title">Binary Tree Traversal Report</p>
+          </div>
+        </div>
+        <hr class="hw-divider"/>
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="hw-due"><i class="fa fa-calendar-xmark"></i> Mar 20</span>
+          <div class="d-flex align-items-center gap-2">
+            <span class="hw-pts">100 pts</span>
+            <span class="hw-badge badge-overdue">Overdue</span>
+          </div>
+        </div>
+        <button class="hw-btn hw-btn-overdue">
+          <i class="fa fa-arrow-up-from-bracket"></i> Submit now
+        </button>
+      </div>
+    </div>
+
+    <!-- Due today card -->
+    <div class="col">
+      <div class="hw-card">
+        <div class="d-flex align-items-center gap-2">
+          <div class="hw-icon icon-quiz"><i class="fa fa-circle-check"></i></div>
+          <div class="overflow-hidden">
+            <p class="hw-course">Data Structures · CSE 301</p>
+            <p class="hw-title">Sorting Algorithms Quiz</p>
+          </div>
+        </div>
+        <hr class="hw-divider"/>
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="hw-due"><i class="fa fa-clock"></i> Today, 11:59 PM</span>
+          <div class="d-flex align-items-center gap-2">
+            <span class="hw-pts">50 pts</span>
+            <span class="hw-badge badge-today">Due today</span>
+          </div>
+        </div>
+        <button class="hw-btn">
+          <i class="fa fa-arrow-up-from-bracket"></i> Start quiz
+        </button>
+      </div>
+    </div>
+
+    <!-- Due today — Linear Algebra -->
+    <div class="col">
+      <div class="hw-card">
+        <div class="d-flex align-items-center gap-2">
+          <div class="hw-icon icon-asgn"><i class="fa fa-file-lines"></i></div>
+          <div class="overflow-hidden">
+            <p class="hw-course">Linear Algebra · MATH 202</p>
+            <p class="hw-title">Matrix Transformations Problem Set</p>
+          </div>
+        </div>
+        <hr class="hw-divider"/>
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="hw-due"><i class="fa fa-clock"></i> Today, 6:00 PM</span>
+          <div class="d-flex align-items-center gap-2">
+            <span class="hw-pts">80 pts</span>
+            <span class="hw-badge badge-today">5 hrs left</span>
+          </div>
+        </div>
+        <button class="hw-btn">
+          <i class="fa fa-arrow-up-from-bracket"></i> Submit work
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /needs attention row -->
+
+  <!-- ── SECTION: Upcoming ── -->
+  <p class="hw-section-label">
+    <i class="fa fa-calendar-days me-1" style="color:#1a73e8;font-size:10px;"></i>
+    Upcoming
+  </p>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 mb-4">
+
+    <!-- Project card -->
+    <div class="col">
+      <div class="hw-card">
+        <div class="d-flex align-items-center gap-2">
+          <div class="hw-icon icon-proj"><i class="fa fa-diagram-project"></i></div>
+          <div class="overflow-hidden">
+            <p class="hw-course">Data Structures · CSE 301</p>
+            <p class="hw-title">DSA Final Project – Graph Implementation</p>
+          </div>
+        </div>
+        <hr class="hw-divider"/>
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="hw-due"><i class="fa fa-calendar"></i> Apr 10</span>
+          <div class="d-flex align-items-center gap-2">
+            <span class="hw-pts">200 pts</span>
+            <span class="hw-badge badge-todo">17 days left</span>
+          </div>
+        </div>
+        <button class="hw-btn">
+          <i class="fa fa-arrow-up-from-bracket"></i> Submit work
+        </button>
+      </div>
+    </div>
+
+    <!-- Quiz upcoming -->
+    <div class="col">
+      <div class="hw-card">
+        <div class="d-flex align-items-center gap-2">
+          <div class="hw-icon icon-quiz"><i class="fa fa-circle-check"></i></div>
+          <div class="overflow-hidden">
+            <p class="hw-course">Linear Algebra · MATH 202</p>
+            <p class="hw-title">Eigenvalues & Eigenvectors Quiz</p>
+          </div>
+        </div>
+        <hr class="hw-divider"/>
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="hw-due"><i class="fa fa-calendar"></i> Mar 28</span>
+          <div class="d-flex align-items-center gap-2">
+            <span class="hw-pts">40 pts</span>
+            <span class="hw-badge badge-todo">4 days left</span>
+          </div>
+        </div>
+        <button class="hw-btn">
+          <i class="fa fa-arrow-up-from-bracket"></i> Start quiz
+        </button>
+      </div>
+    </div>
+
+    <!-- Assignment upcoming -->
+    <div class="col">
+      <div class="hw-card">
+        <div class="d-flex align-items-center gap-2">
+          <div class="hw-icon icon-proj"><i class="fa fa-diagram-project"></i></div>
+          <div class="overflow-hidden">
+            <p class="hw-course">OS Fundamentals · CSE 412</p>
+            <p class="hw-title">Process Scheduling Simulator</p>
+          </div>
+        </div>
+        <hr class="hw-divider"/>
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="hw-due"><i class="fa fa-calendar"></i> Apr 5</span>
+          <div class="d-flex align-items-center gap-2">
+            <span class="hw-pts">150 pts</span>
+            <span class="hw-badge badge-todo">12 days left</span>
+          </div>
+        </div>
+        <button class="hw-btn">
+          <i class="fa fa-arrow-up-from-bracket"></i> Submit work
+        </button>
+      </div>
+    </div>
+
+    <!-- Assignment upcoming -->
+    <div class="col">
+      <div class="hw-card">
+        <div class="d-flex align-items-center gap-2">
+          <div class="hw-icon icon-asgn"><i class="fa fa-file-lines"></i></div>
+          <div class="overflow-hidden">
+            <p class="hw-course">English Composition · ENG 101</p>
+            <p class="hw-title">Argumentative Essay Draft</p>
+          </div>
+        </div>
+        <hr class="hw-divider"/>
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="hw-due"><i class="fa fa-calendar"></i> Apr 1</span>
+          <div class="d-flex align-items-center gap-2">
+            <span class="hw-pts">100 pts</span>
+            <span class="hw-badge badge-todo">8 days left</span>
+          </div>
+        </div>
+        <button class="hw-btn">
+          <i class="fa fa-arrow-up-from-bracket"></i> Submit work
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /upcoming row -->
+
+  <!-- ── SECTION: Completed ── -->
+  <p class="hw-section-label">
+    <i class="fa fa-circle-check me-1" style="color:#137333;font-size:10px;"></i>
+    Completed
+  </p>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3">
+
+    <!-- Graded card -->
+    <div class="col">
+      <div class="hw-card" style="opacity:.85;">
+        <div class="d-flex align-items-center gap-2">
+          <div class="hw-icon icon-asgn"><i class="fa fa-file-lines"></i></div>
+          <div class="overflow-hidden">
+            <p class="hw-course">Data Structures · CSE 301</p>
+            <p class="hw-title" style="text-decoration:line-through;color:#6c757d;">Linked List Implementation</p>
+          </div>
+        </div>
+        <hr class="hw-divider"/>
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="hw-due"><i class="fa fa-calendar-check"></i> Mar 12</span>
+          <div class="d-flex align-items-center gap-2">
+            <span class="hw-score">92/100</span>
+            <span class="hw-badge badge-done">Graded</span>
+          </div>
+        </div>
+        <button class="hw-btn hw-btn-done">
+          <i class="fa fa-eye"></i> View feedback
+        </button>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="hw-card" style="opacity:.85;">
+        <div class="d-flex align-items-center gap-2">
+          <div class="hw-icon icon-asgn"><i class="fa fa-file-lines"></i></div>
+          <div class="overflow-hidden">
+            <p class="hw-course">Linear Algebra · MATH 202</p>
+            <p class="hw-title" style="text-decoration:line-through;color:#6c757d;">Vector Spaces Assignment</p>
+          </div>
+        </div>
+        <hr class="hw-divider"/>
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="hw-due"><i class="fa fa-calendar-check"></i> Mar 10</span>
+          <div class="d-flex align-items-center gap-2">
+            <span class="hw-score">78/80</span>
+            <span class="hw-badge badge-done">Graded</span>
+          </div>
+        </div>
+        <button class="hw-btn hw-btn-done">
+          <i class="fa fa-eye"></i> View feedback
+        </button>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="hw-card" style="opacity:.85;">
+        <div class="d-flex align-items-center gap-2">
+          <div class="hw-icon icon-quiz"><i class="fa fa-circle-check"></i></div>
+          <div class="overflow-hidden">
+            <p class="hw-course">OS Fundamentals · CSE 412</p>
+            <p class="hw-title" style="text-decoration:line-through;color:#6c757d;">Deadlock & Synchronization Quiz</p>
+          </div>
+        </div>
+        <hr class="hw-divider"/>
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="hw-due"><i class="fa fa-calendar-check"></i> Mar 15</span>
+          <div class="d-flex align-items-center gap-2">
+            <span class="hw-score">47/50</span>
+            <span class="hw-badge badge-done">Graded</span>
+          </div>
+        </div>
+        <button class="hw-btn hw-btn-done">
+          <i class="fa fa-eye"></i> View feedback
+        </button>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="hw-card" style="opacity:.85;">
+        <div class="d-flex align-items-center gap-2">
+          <div class="hw-icon icon-asgn"><i class="fa fa-file-lines"></i></div>
+          <div class="overflow-hidden">
+            <p class="hw-course">English Composition · ENG 101</p>
+            <p class="hw-title" style="text-decoration:line-through;color:#6c757d;">Research Proposal</p>
+          </div>
+        </div>
+        <hr class="hw-divider"/>
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="hw-due"><i class="fa fa-calendar-check"></i> Mar 5</span>
+          <div class="d-flex align-items-center gap-2">
+            <span class="hw-score">88/100</span>
+            <span class="hw-badge badge-done">Graded</span>
+          </div>
+        </div>
+        <button class="hw-btn hw-btn-done">
+          <i class="fa fa-eye"></i> View feedback
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /completed row -->
+</div><!-- /hw-grid-wrap -->

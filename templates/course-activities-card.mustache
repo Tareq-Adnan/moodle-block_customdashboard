@@ -1,0 +1,64 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_customdashboard/view-cards
+
+    This template renders the cards view for the customdashboard block.
+
+    Context variables required for this template:
+    * courses - Array of courses
+}}
+
+<div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">{{#str}}activities, block_customdashboard{{/str}}</h5>
+
+        {{#hascourses}}
+        <select id="course-activity-selector" class="form-select form-select-sm" style="width:auto;">
+            {{#courses}}
+            <option value="{{id}}">{{fullname}}</option>
+            {{/courses}}
+        </select>
+        {{/hascourses}}
+    </div>
+
+    <div class="card-body">
+
+    {{#courses}}
+    <div class="activity-course-list" data-courseid="{{id}}" style="{{#first}}display:block;{{/first}}{{^first}}display:none;{{/first}}">
+
+        {{#hasactivities}}
+        <div class="activities-scrollable">
+            <div class="list-group">
+                {{#activities}}
+                <a href="{{url}}" class="list-group-item list-group-item-action">
+                    {{{icon}}} {{name}}
+                </a>
+                {{/activities}}
+            </div>
+        </div>
+        {{/hasactivities}}
+
+        {{^hasactivities}}
+        <p class="text-muted">{{#str}}noactivities, block_customdashboard{{/str}}</p>
+        {{/hasactivities}}
+
+    </div>
+    {{/courses}}
+
+</div>
+</div>

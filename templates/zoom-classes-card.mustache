@@ -1,0 +1,85 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_customdashboard/zoom-classes-card
+
+    Reusable Zoom Classes Card component.
+
+    Context variables required for this template:
+    * zoomclasses - Object with zoom classes data
+    * buttonlabel - String for the button label (join or startjoin)
+}}
+
+<div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">{{#str}}zoomclasses, block_customdashboard{{/str}}</h5>
+        <select id="zoom-filter" class="form-select form-select-sm" style="width: auto;">
+            <option value="today" selected>{{#str}}today, block_customdashboard{{/str}}</option>
+            <option value="upcoming">{{#str}}upcoming, block_customdashboard{{/str}}</option>
+        </select>
+    </div>
+    <div class="card-body zoom-classes-scrollable" id="zoom-classes-container">
+        {{#zoomclasses.hasitems}}
+        <div class="list-group">
+            {{#zoomclasses.items}}
+            {{#canclickzoom}}
+            <a href="{{activityurl}}" target="_blank" class="list-group-item list-group-item-action zoom-class-item" data-timestamp="{{starttimestamp}}" style="text-decoration: none; color: inherit;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1">{{name}}</h6>
+                        <p class="mb-1 small">
+                            {{#pix}}i/course, core{{/pix}} {{coursename}}
+                        </p>
+                        <p class="mb-1 small">
+                            {{#pix}}i/calendar, core{{/pix}} {{starttime}} 
+                        </p>
+                        <p class="mb-1 small">
+                            {{#pix}}e/insert_time, core{{/pix}}  {{duration}} {{#str}}minutes, block_customdashboard{{/str}}
+                        </p>
+                    </div>
+                    <span class="btn btn-sm btn-primary" onclick="event.preventDefault(); window.open('{{joinurl}}', '_blank');">
+                        {{#str}}join, block_customdashboard{{/str}}
+                    </span>
+                </div>
+            </a>
+            {{/canclickzoom}}
+            {{^canclickzoom}}
+            <div class="list-group-item zoom-class-item" data-timestamp="{{starttimestamp}}">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1">{{name}}</h6>
+                        <p class="mb-1 small">
+                            {{#pix}}i/course, core{{/pix}} {{coursename}}
+                        </p>
+                        <p class="mb-1 small">
+                            {{#pix}}i/calendar, core{{/pix}} {{starttime}} 
+                        </p>
+                        <p class="mb-1 small">
+                            {{#pix}}e/insert_time, core{{/pix}}  {{duration}} {{#str}}minutes, block_customdashboard{{/str}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {{/canclickzoom}}
+            {{/zoomclasses.items}}
+        </div>
+        {{/zoomclasses.hasitems}}
+        {{^zoomclasses.hasitems}}
+        <p class="text-muted">{{#str}}nozoomclasses, block_customdashboard{{/str}}</p>
+        {{/zoomclasses.hasitems}}
+    </div>
+</div>
