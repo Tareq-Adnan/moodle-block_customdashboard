@@ -1,85 +1,262 @@
 {{!
-    This file is part of Moodle - http://moodle.org/
+This file is part of Moodle - http://moodle.org/
 
-    Moodle is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+Moodle is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    Moodle is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+Moodle is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with Moodle. If not, see
+<http: //www.gnu.org/licenses />.
 }}
 {{!
-    @template block_customdashboard/zoom-classes-card
+@template block_customdashboard/zoom-classes-card
 
-    Reusable Zoom Classes Card component.
+Reusable Zoom Classes Card component.
 
-    Context variables required for this template:
-    * zoomclasses - Object with zoom classes data
-    * buttonlabel - String for the button label (join or startjoin)
+Context variables required for this template:
+* zoomclasses - Object with zoom classes data
+* buttonlabel - String for the button label (join or startjoin)
 }}
 
-<div class="card mb-3">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">{{#str}}zoomclasses, block_customdashboard{{/str}}</h5>
-        <select id="zoom-filter" class="form-select form-select-sm" style="width: auto;">
-            <option value="today" selected>{{#str}}today, block_customdashboard{{/str}}</option>
-            <option value="upcoming">{{#str}}upcoming, block_customdashboard{{/str}}</option>
-        </select>
-    </div>
-    <div class="card-body zoom-classes-scrollable" id="zoom-classes-container">
-        {{#zoomclasses.hasitems}}
-        <div class="list-group">
-            {{#zoomclasses.items}}
-            {{#canclickzoom}}
-            <a href="{{activityurl}}" target="_blank" class="list-group-item list-group-item-action zoom-class-item" data-timestamp="{{starttimestamp}}" style="text-decoration: none; color: inherit;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="flex-grow-1">
-                        <h6 class="mb-1">{{name}}</h6>
-                        <p class="mb-1 small">
-                            {{#pix}}i/course, core{{/pix}} {{coursename}}
-                        </p>
-                        <p class="mb-1 small">
-                            {{#pix}}i/calendar, core{{/pix}} {{starttime}} 
-                        </p>
-                        <p class="mb-1 small">
-                            {{#pix}}e/insert_time, core{{/pix}}  {{duration}} {{#str}}minutes, block_customdashboard{{/str}}
-                        </p>
-                    </div>
-                    <span class="btn btn-sm btn-primary" onclick="event.preventDefault(); window.open('{{joinurl}}', '_blank');">
-                        {{#str}}join, block_customdashboard{{/str}}
-                    </span>
-                </div>
-            </a>
-            {{/canclickzoom}}
-            {{^canclickzoom}}
-            <div class="list-group-item zoom-class-item" data-timestamp="{{starttimestamp}}">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="flex-grow-1">
-                        <h6 class="mb-1">{{name}}</h6>
-                        <p class="mb-1 small">
-                            {{#pix}}i/course, core{{/pix}} {{coursename}}
-                        </p>
-                        <p class="mb-1 small">
-                            {{#pix}}i/calendar, core{{/pix}} {{starttime}} 
-                        </p>
-                        <p class="mb-1 small">
-                            {{#pix}}e/insert_time, core{{/pix}}  {{duration}} {{#str}}minutes, block_customdashboard{{/str}}
-                        </p>
-                    </div>
-                </div>
+<div class="card-body p-4 zoom-classes-scrollable" id="zoom-classes-container">
+
+    {{#activities.hasitems}}
+
+        {{#activities.has_today}}
+        <p class="hw-section-label">
+            <i class="fa fa-circle-exclamation me-1"></i>
+            Needs attention
+        </p>
+        <div class="row">
+            {{#activities.today}}
+            <div class="col-12 col-md-6 col-lg-4 zoom-class-wrapper">
+                {{> block_customdashboard/components/liveclass}}
             </div>
-            {{/canclickzoom}}
-            {{/zoomclasses.items}}
+            {{/activities.today}}
         </div>
-        {{/zoomclasses.hasitems}}
-        {{^zoomclasses.hasitems}}
-        <p class="text-muted">{{#str}}nozoomclasses, block_customdashboard{{/str}}</p>
-        {{/zoomclasses.hasitems}}
+        {{/activities.has_today}}
+
+        {{#activities.has_upcoming}}
+        <p class="hw-section-label">
+            <i class="fa fa-clock me-1"></i>
+            Upcoming
+        </p>
+        <div class="row">
+            {{#activities.upcoming}}
+            <div class="col-12 col-md-6 col-lg-4 zoom-class-wrapper">
+                {{> block_customdashboard/components/liveclass}}
+            </div>
+            {{/activities.upcoming}}
+        </div>
+        {{/activities.has_upcoming}}
+
+        {{#activities.has_ended}}
+        <p class="hw-section-label">
+            <i class="fa fa-circle-check me-1"></i>
+            Ended
+        </p>
+        <div class="row">
+            {{#activities.ended}}
+            <div class="col-12 col-md-6 col-lg-4 zoom-class-wrapper">
+                {{> block_customdashboard/components/liveclass}}
+            </div>
+            {{/activities.ended}}
+        </div>
+        {{/activities.has_ended}}
+
+    {{/activities.hasitems}}
+
+    {{^activities.hasitems}}
+    <div class="text-center py-5">
+        <div class="empty-icon mb-3 opacity-25">
+            <i class="fa fa-calendar-o fa-4x"></i>
+        </div>
+        <p class="text-muted fw-bold">{{#str}}nozoomclasses, block_customdashboard{{/str}}</p>
     </div>
+    {{/activities.hasitems}}
+
 </div>
+
+<style>
+    :root {
+        --child-purple: #6366f1;
+        --child-pink: #ec4899;
+        --child-amber: #f59e0b;
+        --child-blue: #3b82f6;
+        --child-green: #10b981;
+    }
+
+    .moodle-zoom-dashboard .rounded-xl {
+        border-radius: 1.5rem !important;
+    }
+
+    .moodle-zoom-dashboard .rounded {
+        border-radius: 1rem !important;
+    }
+
+    .zoom-class-item-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #ffffff;
+        border: 1px solid #f0f0f0 !important;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .zoom-class-item-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .card-accent-line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--current-theme);
+    }
+
+    /* Dynamic Colors */
+    .zoom-class-wrapper:nth-child(5n+1) {
+        --current-theme: var(--child-purple);
+        --current-theme-bg: #eef2ff;
+    }
+
+    .zoom-class-wrapper:nth-child(5n+2) {
+        --current-theme: var(--child-pink);
+        --current-theme-bg: #fdf2f8;
+    }
+
+    .zoom-class-wrapper:nth-child(5n+3) {
+        --current-theme: var(--child-amber);
+        --current-theme-bg: #fffbeb;
+    }
+
+    .zoom-class-wrapper:nth-child(5n+4) {
+        --current-theme: var(--child-blue);
+        --current-theme-bg: #eff6ff;
+    }
+
+    .zoom-class-wrapper:nth-child(5n+5) {
+        --current-theme: var(--child-green);
+        --current-theme-bg: #ecfdf5;
+    }
+
+    .bg-primary-soft {
+        background-color: #eef2ff;
+    }
+
+    .bg-faded-theme {
+        background-color: var(--current-theme-bg) !important;
+    }
+
+    .text-theme {
+        color: var(--current-theme) !important;
+    }
+
+    .badge-soft-theme {
+        background-color: var(--current-theme-bg);
+        color: var(--current-theme);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.65rem;
+        letter-spacing: 0.03em;
+    }
+
+    .btn-theme {
+        background: var(--current-theme);
+        color: white;
+        border: none;
+        transition: all 0.2s;
+    }
+
+    .btn-theme:hover {
+        filter: brightness(1.1);
+        color: white;
+        transform: scale(1.02);
+        background: var(--current-theme);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .live-indicator {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .live-indicator .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        animation: pulse-green 2s infinite;
+    }
+
+    @keyframes pulse-green {
+        0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        }
+
+        70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+        }
+
+        100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+        }
+    }
+
+    .line-height-base {
+        line-height: 1.4;
+    }
+
+    .fw-semibold {
+        font-weight: 600 !important;
+    }
+
+    .disabled-item {
+        opacity: 0.7;
+        filter: grayscale(0.2);
+        cursor: not-allowed;
+    }
+
+    /* Moodle Pix Icon Styling */
+    .zoom-class-item-card img.smallicon {
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+        vertical-align: middle;
+    }
+
+    /* Layout fix - ensures proper row structure */
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -0.75rem;
+        margin-left: -0.75rem;
+    }
+
+    .zoom-class-wrapper {
+        padding-right: 0.75rem;
+        padding-left: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .hw-section-label {
+        width: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding-right: 0.75rem;
+        padding-left: 0.75rem;
+        margin-bottom: 1rem;
+    }
+</style>

@@ -24,6 +24,8 @@
 
 namespace block_customdashboard\output;
 
+use block_customdashboard\constants;
+use context_course;
 use moodle_url;
 
 defined('MOODLE_INTERNAL') || die();
@@ -69,7 +71,7 @@ class renderer extends plugin_renderer_base {
             'hascourses' => !empty($courses),
             'isparent' => true,
             'zoomclasses' => $this->get_zoom_classes($selectedchildid, 'student'),
-            'teachers' => $this->get_student_teachers($selectedchildid),
+            'teachers' => self::get_student_teachers($selectedchildid),
             'buttonlabel' => 'join',
             'canclickzoom' => false,
         ];
@@ -119,51 +121,14 @@ class renderer extends plugin_renderer_base {
 
     public function render_student_dashboard($userid) {
         global $PAGE, $DB;
-    
-        // Step 1: Get all courses the student is enrolled in
+
         $courses = enrol_get_users_courses($userid, true, ['id', 'fullname']);
-        //fetch announcmeents
-        $announcementsdata = [];
-        $courseids = array_keys($courses);
-        // Step 2: Fetch announcement forums and discussions for these courses
         
-        $sql = "
-                SELECT 
-                    f.id AS forumid,
-                    f.name AS forumname,
-                    fd.id AS discussionid,
-                    fd.name AS discussionname,
-                    c.id AS courseid,
-                    c.fullname AS coursename
-                FROM {forum} f
-                JOIN {forum_discussions} fd ON fd.forum = f.id
-                JOIN {course} c ON c.id = f.course
-                WHERE f.type = 'news'
-                  AND c.id IN (" . implode(',', array_map('intval', $courseids)) . ")
-                  AND fd.name IS NOT NULL 
-                  AND fd.name <> ''
-                ORDER BY fd.timemodified DESC
-            ";
-            if (!empty($courseids)) {
-                $records = $DB->get_records_sql($sql);
-                
-                foreach ($records as $rec) {
-                    $announcementsdata[] = [
-                        'course' => format_string($rec->coursename),
-                        'forum' => format_string($rec->forumname),
-                        'discussion' => format_string($rec->discussionname),
-                        'url' => (new \moodle_url('/mod/forum/discuss.php', ['d' => $rec->discussionid]))->out(false)
-                    ];
-                }
-            } 
-            
-
         //fetch course activities
-
         $courseactivities = [];
-    
-        foreach ($courses as $i => $course) { // <-- note $i for first course
-            // Step 2: Get all course modules for this course
+
+        foreach ($courses as $i => $course) {
+            
             $cms = $DB->get_records_sql("
                 SELECT cm.id AS cmid, m.name AS modname, cm.instance
                 FROM {course_modules} cm
@@ -171,28 +136,28 @@ class renderer extends plugin_renderer_base {
                 WHERE cm.course = :courseid AND cm.deletioninprogress = 0 AND m.name <> 'subsection'
                 ORDER BY cm.id ASC
             ", ['courseid' => $course->id]);
-    
+
             $activities = [];
-    
+
             // Step 3: Loop through course modules to get their names and URLs
             foreach ($cms as $cm) {
                 // Get the actual activity record to get its name
                 $module = $DB->get_record($cm->modname, ['id' => $cm->instance], 'id, name');
-    
+
                 // Skip if module does not exist
                 if (!$module) {
                     continue;
                 }
-    
+
                 $activities[] = [
                     'id' => $cm->cmid,
                     'name' => format_string($module->name),
                     'modname' => $cm->modname,
-                    'url' => new \moodle_url("/mod/{$cm->modname}/view.php", ['id' => $cm->cmid]),
+                    'url' => new moodle_url("/mod/{$cm->modname}/view.php", ['id' => $cm->cmid]),
                     'icon' => '', // optional later
                 ];
             }
-    
+
             $courseactivities[] = [
                 'id' => $course->id,
                 'fullname' => format_string($course->fullname),
@@ -201,7 +166,7 @@ class renderer extends plugin_renderer_base {
                 'first' => ($i === 0), // <-- mark the first course for Mustache
             ];
         }
-    
+
         // Step 4: Prepare data for the Mustache template
         $data = [
             'isstudent' => true,
@@ -211,34 +176,38 @@ class renderer extends plugin_renderer_base {
             'canclickzoom' => true,
             'courses' => $courseactivities,
             'hascourses' => !empty($courseactivities),
-            'announcements' => $announcementsdata,
-            'homework' => new moodle_url('/blocks/customdashboard/homework.php', []),
+            'homework' => new moodle_url('/blocks/customdashboard/activities.php', ['type' => constants::CUDB_MODULE_TYPE_HOMEWORK]),
+            'activities' => new moodle_url('/blocks/customdashboard/activities.php', ['type' => constants::CUDB_MODULE_TYPE_ACTIVITY]),
+            'assessment' => new moodle_url('/blocks/customdashboard/activities.php', ['type' => constants::CUDB_MODULE_TYPE_ASSESSMENT]),
+            'notice' => new moodle_url('/blocks/customdashboard/activities.php', ['type' => constants::CUDB_MODULE_TYPE_NOTICE]),
+            'communication' => new moodle_url('/blocks/customdashboard/activities.php', ['type' => constants::CUDB_MODULE_TYPE_COMMUNICATION]),
+            'liveclassess' => new moodle_url('/blocks/customdashboard/activities.php', ['type' => constants::CUDB_MODULE_TYPE_LIVECLASS]),
         ];
-        
+
         // Step 5: Initialize JavaScript module
         $PAGE->requires->js_call_amd('block_customdashboard/selector', 'init');
-    
+
         return $this->render_from_template('block_customdashboard/customui', $data);
     }
 
     public function get_course_activities_for_user($courseid, $userid) {
         global $DB;
-    
+
         // Get course modules for the course.
         $modinfo = get_fast_modinfo($courseid, $userid);
         $cms = $modinfo->get_cms();
-    
+
         $activities = [];
-    
+
         foreach ($cms as $cm) {
             // Skip modules the user cannot see
             if (!$cm->uservisible) {
                 continue;
             }
-    
+
             // Get the activity record to get the name
             $module = $DB->get_record($cm->modname, ['id' => $cm->instance], 'id, name');
-    
+
             $activities[] = [
                 'id' => $cm->id,
                 'name' => $module ? format_string($module->name) : $cm->modname,
@@ -246,7 +215,7 @@ class renderer extends plugin_renderer_base {
                 'url' => $cm->url ? $cm->url->out(false) : (string)new \moodle_url("/mod/{$cm->modname}/view.php", ['id' => $cm->id]),
             ];
         }
-    
+
         return $activities;
     }
 
@@ -373,15 +342,15 @@ class renderer extends plugin_renderer_base {
 
         require_once($CFG->libdir . '/filelib.php');
 
-        $coursecontext = \context_course::instance($course->id);
-        
+        $coursecontext = context_course::instance($course->id);
+
         // Try to get course overview files.
         $fs = get_file_storage();
         $files = $fs->get_area_files($coursecontext->id, 'course', 'overviewfiles', false, 'filename', false);
-        
+
         if (count($files)) {
             $file = reset($files);
-            $url = \moodle_url::make_pluginfile_url(
+            $url = moodle_url::make_pluginfile_url(
                 $file->get_contextid(),
                 $file->get_component(),
                 $file->get_filearea(),
@@ -608,8 +577,6 @@ class renderer extends plugin_renderer_base {
      * @return array Activity list
      */
     private function get_activity_list($course, $userid) {
-        global $OUTPUT;
-        
         $completion = new completion_info($course);
         $activities = [];
 
@@ -638,8 +605,8 @@ class renderer extends plugin_renderer_base {
                     'modname' => $cm->modname,
                     'iconurl' => $iconurl,
                     'completed' => $iscompleted,
-                    'completedtext' => $iscompleted ? 
-                        get_string('completed', 'block_customdashboard') : 
+                    'completedtext' => $iscompleted ?
+                        get_string('completed', 'block_customdashboard') :
                         get_string('notcompleted', 'block_customdashboard'),
                     'completedclass' => $iscompleted ? 'badge-success' : 'badge-secondary',
                 ];
@@ -737,8 +704,8 @@ class renderer extends plugin_renderer_base {
     private function get_course_instructors($courseid) {
         global $DB, $OUTPUT;
 
-        $coursecontext = \context_course::instance($courseid);
-        
+        $coursecontext = context_course::instance($courseid);
+
         // Get teacher and editing teacher roles.
         $teacherroles = $DB->get_records_sql(
             "SELECT id FROM {role} WHERE archetype IN ('editingteacher', 'teacher')"
@@ -781,89 +748,134 @@ class renderer extends plugin_renderer_base {
      * @param string $role User role (student or teacher)
      * @return array Zoom classes data
      */
-    private function get_zoom_classes($userid, $role) {
-        global $DB, $CFG;
+    public static function get_zoom_classes($userid, $role) {
+        global $DB;
 
-        // Check if zoom module exists.
         if (!$DB->record_exists('modules', ['name' => 'zoom', 'visible' => 1])) {
-            return ['items' => [], 'hasitems' => false];
+            return self::empty_response();
         }
 
         $now = time();
-        $todaystart = strtotime('today', $now);
 
-        // Get enrolled courses based on role.
+        $startRange = strtotime('yesterday 00:00:00');
+        $endRange   = strtotime('+2 days 23:59:59');
+
+        $todaystart = strtotime('today', $now);
+        $todayend   = strtotime('tomorrow', $todaystart) - 1;
+
         $courses = enrol_get_users_courses($userid, true);
-        
         if (empty($courses)) {
-            return ['items' => [], 'hasitems' => false];
+            return self::empty_response();
         }
 
         $courseids = array_keys($courses);
 
-        // If teacher, filter courses where user has teacher/manager role.
         if ($role === 'teacher') {
-            $filteredcourses = [];
-            foreach ($courses as $course) {
-                $coursecontext = \context_course::instance($course->id);
-                if (has_capability('mod/zoom:addinstance', $coursecontext, $userid)) {
-                    $filteredcourses[] = $course->id;
-                }
+            $courseids = array_filter($courseids, function($cid) use ($userid) {
+                $context = context_course::instance($cid);
+                return has_capability('mod/zoom:addinstance', $context, $userid);
+            });
+
+            if (empty($courseids)) {
+                return self::empty_response();
             }
-            $courseids = $filteredcourses;
         }
 
-        if (empty($courseids)) {
-            return ['items' => [], 'hasitems' => false];
-        }
+        list($insql, $params) = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED);
 
-        list($insql, $params) = $DB->get_in_or_equal($courseids);
-        
-        // Get all zoom calendar events from today onwards.
-        // Zoom creates calendar events for each occurrence (including recurring meetings).
-        $params[] = $todaystart;
-        
-        $sql = "SELECT e.id, e.name, e.timestart, e.instance as zoomid, e.courseid, c.fullname as coursename
+        $params['start'] = $startRange;
+        $params['end'] = $endRange;
+
+        $sql = "SELECT 
+                    e.id,
+                    e.name,
+                    e.timestart,
+                    e.instance AS zoomid,
+                    e.courseid,
+                    c.fullname AS coursename,
+                    z.duration,
+                    z.join_url,
+                    cm.id AS cmid
                 FROM {event} e
-                JOIN {course} c ON e.courseid = c.id
+                JOIN {course} c ON c.id = e.courseid
+                JOIN {zoom} z ON z.id = e.instance
+                JOIN {modules} m ON m.name = 'zoom'
+                JOIN {course_modules} cm 
+                    ON cm.instance = z.id 
+                    AND cm.module = m.id 
+                    AND cm.course = e.courseid
                 WHERE e.modulename = 'zoom'
-                AND e.courseid $insql
-                AND e.timestart >= ?
-                AND e.visible = 1
+                    AND e.courseid $insql
+                    AND e.visible = 1
+                    AND e.timestart BETWEEN :start AND :end
                 ORDER BY e.timestart ASC";
 
         $events = $DB->get_records_sql($sql, $params);
 
-        $items = [];
+        $grouped = [
+            'today' => [],
+            'upcoming' => [],
+            'ended' => []
+        ];
+
         foreach ($events as $event) {
-            // Get the zoom instance to fetch duration and join_url.
-            $zoom = $DB->get_record('zoom', ['id' => $event->zoomid], 'id, name, duration, join_url');
-            
-            if ($zoom) {
-                // Get course module ID for the zoom activity.
-                $cm = get_coursemodule_from_instance('zoom', $zoom->id, $event->courseid);
-                $activityurl = '';
-                if ($cm) {
-                    $activityurl = new \moodle_url('/mod/zoom/view.php', ['id' => $cm->id]);
-                    $activityurl = $activityurl->out(false);
-                }
-                
-                $items[] = [
-                    'id' => $zoom->id,
-                    'name' => format_string($event->name),
-                    'coursename' => format_string($event->coursename),
-                    'starttime' => userdate($event->timestart, get_string('strftimedatetime', 'langconfig')),
-                    'starttimestamp' => $event->timestart,
-                    'duration' => $zoom->duration / 60, // Convert minutes to hours
-                    'joinurl' => $zoom->join_url,
-                    'activityurl' => $activityurl,
-                ];
+
+            $start = (int)$event->timestart;
+            $end = $start + (int)$event->duration;
+
+            $canjoin = ($now >= $start && $now <= $end);
+
+            if ($start >= $todaystart && $start <= $todayend) {
+                $bucket = 'today';
+            } elseif ($start > $todayend) {
+                $bucket = 'upcoming';
+            } else {
+                $bucket = 'ended';
             }
+
+            if ($canjoin) {
+                $status = 'Live';
+            } elseif ($now < $start) {
+                $status = 'Scheduled';
+            } else {
+                $status = 'Ended';
+            }
+
+            $activityurl = (new moodle_url('/mod/zoom/view.php', [
+                'id' => $event->cmid
+            ]))->out(false);
+
+            $grouped[$bucket][] = [
+                'id' => (int)$event->zoomid,
+                'name' => format_string($event->name),
+                'coursename' => format_string($event->coursename),
+                'starttime' => userdate($start, get_string('strftimedatetime', 'langconfig')),
+                'starttimestamp' => $start,
+                'duration' => $event->duration / 60,
+                'status' => $status,
+                'action' => $canjoin ? 'join' : 'view',
+                'joinurl' => $canjoin ? $event->join_url : $activityurl,
+                'activityurl' => $activityurl,
+            ];
         }
 
         return [
-            'items' => $items,
-            'hasitems' => !empty($items),
+            'today' => array_values($grouped['today']),
+            'upcoming' => array_values($grouped['upcoming']),
+            'ended' => array_values($grouped['ended']),
+            'hasitems' => !empty($events),
+            'has_today' => !empty($grouped['today']),
+            'has_upcoming' => !empty($grouped['upcoming']),
+            'has_ended' => !empty($grouped['ended']),
+        ];
+    }
+
+    private static function empty_response() {
+        return [
+            'today' => [],
+            'upcoming' => [],
+            'ended' => [],
+            'hasitems' => false
         ];
     }
 
@@ -873,11 +885,11 @@ class renderer extends plugin_renderer_base {
      * @param int $studentid Student user ID
      * @return array Teachers data
      */
-    private function get_student_teachers($studentid) {
+    public static function get_student_teachers($studentid) {
         global $DB, $OUTPUT;
 
         $courses = enrol_get_users_courses($studentid, true);
-        
+
         if (empty($courses)) {
             return ['items' => [], 'hasitems' => false];
         }
@@ -886,8 +898,8 @@ class renderer extends plugin_renderer_base {
         $uniqueteachers = [];
 
         foreach ($courses as $course) {
-            $coursecontext = \context_course::instance($course->id);
-            
+            $coursecontext = context_course::instance($course->id);
+
             // Get teacher and editing teacher roles.
             $teacherroles = $DB->get_records_sql(
                 "SELECT id FROM {role} WHERE archetype IN ('manager', 'editingteacher', 'teacher')"

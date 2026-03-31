@@ -1,6 +1,5 @@
 <?php
 
-use block_customdashboard\local\pages\homework_submissions;
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,9 +14,9 @@ use block_customdashboard\local\pages\homework_submissions;
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
+use block_customdashboard\local\pages\activity;
 /**
- * TODO describe file homework
+ * TODO describe file activities
  *
  * @package    block_customdashboard
  * @copyright  2026 Brain Station 23 <sales@brainstation-23.com>
@@ -25,15 +24,8 @@ use block_customdashboard\local\pages\homework_submissions;
  */
 
 require('../../config.php');
-
 require_login();
 
-$url = new moodle_url('/blocks/customdashboard/homework.php', []);
-$PAGE->set_url($url);
-$PAGE->set_context(context_system::instance());
-$PAGE->set_pagelayout('dashboard');
-$PAGE->set_heading('Homework Submissions');
-
-$PAGE->set_heading($SITE->fullname);
-$homeworks = new homework_submissions();
+$type = required_param('type', PARAM_INT);
+$homeworks = new activity($type);
 $homeworks->render();

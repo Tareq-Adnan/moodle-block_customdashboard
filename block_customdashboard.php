@@ -33,7 +33,7 @@ class block_customdashboard extends block_base {
      * Initialize the block.
      */
     public function init() {
-        // $this->title = get_string('pluginname', 'block_customdashboard');
+        $this->title = get_string('pluginname', 'block_customdashboard');
     }
 
     /**
@@ -179,8 +179,8 @@ class block_customdashboard extends block_base {
             
             $hasstudentrole = $DB->record_exists_sql(
                 "SELECT 1 FROM {role_assignments} ra
-                 JOIN {context} ctx ON ra.contextid = ctx.id
-                 WHERE ra.roleid $insql AND ra.userid = ? AND ctx.contextlevel = ?",
+                   JOIN {context} ctx ON ra.contextid = ctx.id
+                  WHERE ra.roleid $insql AND ra.userid = ? AND ctx.contextlevel = ?",
                 array_merge($params, [CONTEXT_COURSE])
             );
             

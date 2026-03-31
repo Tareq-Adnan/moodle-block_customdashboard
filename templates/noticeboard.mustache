@@ -1,0 +1,290 @@
+{{!
+This file is part of Moodle - http://moodle.org/
+
+Moodle is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Moodle is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Moodle. If not, see
+<http: //www.gnu.org/licenses />.
+}}
+{{!
+@template block_customdashboard/noticeboard
+
+TODO describe template noticeboard
+
+Example context (json):
+{
+}
+}}
+<style>
+        /* Simple top bar — no background */
+        .top-bar {
+            background: transparent;
+            padding: 2rem 1rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .top-bar .emoji {
+            font-size: 2rem;
+            display: inline-block;
+            opacity: 0.7;
+        }
+
+        .top-bar h1 {
+            font-size: clamp(1.5rem, 4vw, 1.9rem);
+            font-weight: 600;
+            color: #2c3e50;
+            letter-spacing: -0.01em;
+            margin-top: 0.2rem;
+        }
+
+        .top-bar p {
+            color: #6c7a89;
+            font-size: 0.85rem;
+            margin-top: 0.2rem;
+            font-weight: 400;
+        }
+
+        /* Search bar (decorative) */
+        .search-wrapper {
+            max-width: 500px;
+            margin: 0 auto 1.8rem;
+            position: relative;
+            z-index: 5;
+        }
+
+        .search-note {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            /* margin-top: 0.5rem; */
+        }
+
+        /* Count badge */
+        .count-badge {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            padding: 0.25rem 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            font-size: 0.8rem;
+            color: #5a6e7c;
+        }
+
+        .count-number {
+            background: #f1f5f9;
+            color: #2c3e50;
+            border-radius: 30px;
+            padding: 0.05rem 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Card grid */
+        .notices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.2rem;
+        }
+
+        /* Card styling — no top border, reduced border-radius, white cards on transparent body */
+        .notice-card {
+            /* background: #fcfcfc; */
+            border-radius: 12px;
+            border: 1px solid #e9edf2;
+            /* border-top: none; */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            transition: all 0.2s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .notice-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+            border-color: #dee4eb;
+        }
+
+        .card-content {
+            padding: 1.2rem 1.2rem 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Course chip — no icons, simple */
+        .course-chip {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            margin-bottom: 0.8rem;
+            background: #f1f5f9;
+            color: #5a6e7c;
+            width: fit-content;
+        }
+
+        /* Discussion title — no icons */
+        .discussion-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            line-height: 1.45;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Forum row — no icons */
+        .forum-row {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #7c8b9c;
+            background: #fafbfd;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            width: fit-content;
+        }
+
+        /* Button — positioned at bottom using margin-top auto */
+        .read-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.2s;
+            background: #f1f5f9;
+            color: #4a6a7f;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            width: fit-content;
+            margin-top: auto;
+        }
+
+        .read-btn:hover {
+            background: #e9eef3;
+            color: #2c3e50;
+            transform: translateX(2px);
+        }
+
+        /* Info panel */
+        .info-note {
+            margin-top: 2rem;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 0.7rem 1.2rem;
+            border: 1px solid #e9edf2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .info-text {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #6c7a89;
+        }
+
+        .date-chip {
+            background: #f8fafc;
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: #7c8b9c;
+        }
+
+        @media (max-width: 720px) {
+            .notices-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+        
+    </style>
+
+    <div class="container mb-2">
+
+        <!-- Decorative search bar (static, no JS) -->
+        <div class="search-wrapper">
+            <p class="text-center text-muted">All your class announcements in one place</p>
+            <!-- <div class="search-decorative">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-text" placeholder="Search notices... (course, forum, or topic)" />
+                <span class="search-badge">6 notices</span>
+            </div> -->
+            <div class="search-note">
+                <i class="bi bi-info-circle"></i> Browse all class updates below
+            </div>
+        </div>
+
+        <!-- Count indicator -->
+        <div class="count-badge">
+            <i class="bi bi-megaphone"></i> All announcements
+            <span class="count-number">{{activities.total}}</span>
+        </div>
+
+        <!-- ========== ALL NOTICES (PURE HTML/CSS, NO JS) ========== -->
+        <div class="notices-grid">
+        {{#activities.notices}}
+            <div class="notice-card">
+                <div class="card-content">
+                    <div class="course-chip">{{course}}</div>
+                    <div class="discussion-title">{{discussion}}</div>
+                    <div class="forum-row">{{forum}}</div>
+                    <a href="{{url}}" class="read-btn" target="_blank">View details →</a>
+                </div>
+            </div>
+        {{/activities.notices}}
+        {{^activities.notices}}
+        <div class="notice-card">No announcements or notices are publised.</div>
+        {{/activities.notices}}
+        </div>
+
+        <!-- Simple info panel -->
+        <!-- <div class="info-note">
+            <div class="info-text">
+                <i class="bi bi-envelope-paper" style="color:#94a3b8;"></i>
+                <span>All notices link to Moodle forum discussions</span>
+            </div>
+            <div class="date-chip">
+                <i class="bi bi-calendar3"></i> April 2025
+            </div>
+        </div> -->
+    </div>

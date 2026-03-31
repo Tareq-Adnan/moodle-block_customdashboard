@@ -226,3 +226,193 @@
 .block-customdashboard .activities-scrollable::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+/* Homework, Activites, Assessment page */
+
+.hw-grid-wrap {
+        padding: 1rem 0;
+    }
+
+    .hw-section-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+
+    /* Card */
+    .hw-card {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 14px;
+        padding: 1rem 1.1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        transition: box-shadow .15s, border-color .15s;
+        height: 100%;
+    }
+
+    .hw-card:hover {
+        border-color: #ced4da;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
+    }
+
+    /* Icon pill */
+    .hw-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hw-icon i {
+        font-size: 16px;
+    }
+
+    .icon-asgn {
+        background: #e8f0fe;
+        color: #1a73e8;
+    }
+
+    .icon-quiz {
+        background: #fff3e0;
+        color: #e65100;
+    }
+
+    .icon-proj {
+        background: #ede7f6;
+        color: #6200ea;
+    }
+
+    /* Text */
+    .hw-course {
+        font-size: 11px;
+        color: #6c757d;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .hw-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #212529;
+        margin: 0;
+        line-height: 1.35;
+    }
+
+    /* Divider */
+    .hw-divider {
+        border: none;
+        border-top: 1px solid #f1f3f5;
+        margin: 0;
+    }
+
+    /* Due date */
+    .hw-due {
+        font-size: 12px;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .hw-due i {
+        font-size: 12px;
+    }
+
+    /* Status badges */
+    .hw-badge {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 9px;
+        border-radius: 20px;
+        white-space: nowrap;
+    }
+
+    .badge-todo {
+        background: #e8f0fe;
+        color: #1558d6;
+    }
+
+    .badge-today {
+        background: #fff3e0;
+        color: #bf360c;
+    }
+
+    .badge-overdue {
+        background: #fce8e6;
+        color: #c5221f;
+    }
+
+    .badge-done {
+        background: #e6f4ea;
+        color: #137333;
+    }
+
+    /* Points */
+    .hw-pts {
+        font-size: 11px;
+        color: #6c757d;
+    }
+
+    .hw-score {
+        font-size: 13px;
+        font-weight: 600;
+        color: #137333;
+    }
+
+    /* Action button */
+    .hw-btn {
+        width: 100%;
+        padding: 7px 12px;
+        border-radius: 8px;
+        margin-top: auto;
+        border: 1px solid #dee2e6;
+        background: transparent;
+        color: #495057;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: background .15s, border-color .15s;
+    }
+
+    .hw-btn:hover {
+        background: #f8f9fa;
+        border-color: #ced4da;
+    }
+
+    .hw-btn i {
+        font-size: 13px;
+    }
+
+    .hw-btn-done {
+        background: #e6f4ea;
+        border-color: #a8d5b5;
+        color: #137333;
+    }
+
+    .hw-btn-done:hover {
+        background: #ceead6;
+    }
+
+    .hw-btn-overdue {
+        background: #fce8e6;
+        border-color: #f5c6c5;
+        color: #c5221f;
+    }
+
+    .hw-btn-overdue:hover {
+        background: #f5c6c5;
+    }

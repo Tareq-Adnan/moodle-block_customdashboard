@@ -24,11 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026013001;
-$plugin->requires  = 2023100900;
+$plugin->version   = 2026013002;
+$plugin->requires  = 2025040800;
 $plugin->component = 'block_customdashboard';
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release   = '1.1';
-$plugin->dependencies = [
-    'local_parentmanager' => ANY_VERSION,
-];
+// $plugin->dependencies = [
+//     'local_parentmanager' => ANY_VERSION,
+// ];

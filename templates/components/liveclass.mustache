@@ -1,0 +1,64 @@
+{{!
+This file is part of Moodle - http://moodle.org/
+
+Moodle is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Moodle is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Moodle. If not, see
+<http: //www.gnu.org/licenses />.
+}}
+{{!
+@template block_customdashboard/components/liveclass
+
+TODO describe template liveclass
+
+Example context (json):
+{
+}
+}}
+<a href="{{activityurl}}" target="_blank"
+    class="card h-100 border-0 shadow-sm rounded zoom-class-item-card transition-all"
+    data-timestamp="{{starttimestamp}}" style="text-decoration: none; color: inherit;">
+    <div class="card-accent-line"></div>
+    <div class="card-body p-4 d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <span class="badge rounded-pill badge-soft-theme px-3 py-2">
+                {{#pix}}i/course, core{{/pix}} {{coursename}}
+            </span>
+            <div class="live-indicator">
+                <span class="dot bg-success"></span>
+                <span class="text-success small fw-bold">{{status}}</span>
+            </div>
+        </div>
+
+        <h5 class="card-title fw-bold text-dark mb-4 line-height-base">
+            {{name}}
+        </h5>
+
+        <div class="mt-auto">
+            <div class="info-box mb-4 p-3 rounded bg-faded-theme">
+                <div class="d-flex align-items-center mb-2 small fw-semibold">
+                    <span class="me-2 opacity-75">{{#pix}}i/calendar, core{{/pix}}</span>
+                    <span>{{starttime}}</span>
+                </div>
+                <div class="d-flex align-items-center small fw-semibold">
+                    <span class="me-2 opacity-75">{{#pix}}e/insert_time, core{{/pix}}</span>
+                    <span>{{duration}} {{#str}}minutes, block_customdashboard{{/str}}</span>
+                </div>
+            </div>
+
+            <button class="btn btn-theme w-100 rounded-pill fw-bold py-2 shadow-sm"
+                onclick="event.preventDefault(); window.open('{{joinurl}}', '_blank');">
+                <i class="fa fa-play-circle me-2"></i>{{action}}
+            </button>
+        </div>
+    </div>
+</a>

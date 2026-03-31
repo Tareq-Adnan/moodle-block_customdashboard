@@ -1,62 +1,333 @@
 {{!
-    This file is part of Moodle - http://moodle.org/
+This file is part of Moodle - http://moodle.org/
 
-    Moodle is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+Moodle is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    Moodle is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+Moodle is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with Moodle. If not, see
+<http: //www.gnu.org/licenses />.
 }}
 {{!
-    @template block_customdashboard/teachers-card
+@template block_customdashboard/teachers-card
 
-    Reusable Teachers Card component.
+Reusable Teachers Card component.
 
-    Context variables required for this template:
-    * teachers - Object with teachers data
+Context variables required for this template:
+* teachers - Object with teachers data
 }}
 
-<div class="card mb-3">
-    <div class="card-header">
+<style>
+    .teachers-widget {
+        border: none;
+        border-radius: 20px;
+        /* box-shadow: 0 4px 24px rgba(80, 120, 200, 0.10); */
+        overflow: hidden;
+        font-family: 'Nunito', sans-serif;
+    }
+
+    /* HEADER */
+    .teachers-widget .card-header {
+        background: linear-gradient(105deg, #43b8f5 0%, #8b6ff5 100%);
+        border: none;
+        padding: 16px 22px;
+    }
+
+    .teachers-widget .card-header h5 {
+        font-family: 'Fredoka One', cursive;
+        font-size: 1.2rem;
+        color: #fff;
+        margin: 0;
+        letter-spacing: 0.2px;
+    }
+
+    .header-icon-wrap {
+        background: rgba(255, 255, 255, 0.22);
+        border-radius: 10px;
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.15rem;
+        flex-shrink: 0;
+    }
+
+    /* GRID SCROLL AREA */
+    .teachers-grid-wrap {
+        max-height: 460px;
+        overflow-y: auto;
+        padding: 16px;
+        scrollbar-width: thin;
+        scrollbar-color: #c0b4f5 #f0eeff;
+    }
+
+    .teachers-grid-wrap::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .teachers-grid-wrap::-webkit-scrollbar-track {
+        background: #f0eeff;
+        border-radius: 99px;
+    }
+
+    .teachers-grid-wrap::-webkit-scrollbar-thumb {
+        background: #c0b4f5;
+        border-radius: 99px;
+    }
+
+    /* TEACHER CARD */
+    .teacher-card {
+        /* background: #f7f9ff; */
+        border: 1.5px solid #e4eaf8;
+        border-radius: 16px;
+        padding: 20px 14px 16px;
+        text-align: center;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+        height: 100%;
+    }
+
+    .teacher-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(100, 130, 240, 0.15);
+        border-color: #b0c0f0;
+        background: #fff;
+    }
+
+    /* AVATAR */
+    .teacher-card .userpicture,
+    .teacher-card img.avatar-img {
+        width: 64px !important;
+        height: 64px !important;
+        border-radius: 50% !important;
+        object-fit: cover;
+        border: 3px solid #fff;
+        box-shadow: 0 3px 12px rgba(100, 120, 220, 0.20);
+        display: block;
+        margin: 0 auto 10px;
+    }
+
+    .teacher-name {
+        font-family: 'Fredoka One', cursive;
+        font-size: 0.95rem;
+        color: #262f5e;
+        line-height: 1.25;
+        margin-bottom: 8px;
+    }
+
+    /* META PILLS */
+    .teacher-meta-list {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .meta-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #5a6490;
+        background: #edf0fc;
+        border-radius: 8px;
+        padding: 3px 9px;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .meta-chip .bi {
+        color: #7b96e8;
+        flex-shrink: 0;
+        font-size: 0.72rem;
+    }
+
+    .meta-chip.course-chip {
+        background: #ede8ff;
+        color: #6b50d4;
+    }
+
+    .meta-chip.course-chip .bi {
+        color: #8b6ff5;
+    }
+
+    /* EMAIL BUTTON */
+    .btn-email {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        margin-top: 10px;
+        background: linear-gradient(135deg, #43b8f5, #8b6ff5);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 5px 14px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        font-family: 'Nunito', sans-serif;
+        text-decoration: none;
+        transition: opacity 0.15s ease, transform 0.15s ease;
+        box-shadow: 0 3px 10px rgba(100, 140, 240, 0.28);
+    }
+
+    .btn-email:hover {
+        opacity: 0.88;
+        transform: scale(1.04);
+        color: #fff;
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+        padding: 48px 20px;
+        text-align: center;
+        color: #9aa4c4;
+    }
+
+    .empty-state .bi {
+        font-size: 2.4rem;
+        color: #c8d0e8;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .empty-state p {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin: 0;
+    }
+</style>
+
+<div class="teachers-widget mb-3">
+
+    <!-- <div class="card-header d-flex align-items-center gap-2">
+        <div class="header-icon-wrap">🏫</div>
         <h5 class="mb-0">{{#str}}teachers, block_customdashboard{{/str}}</h5>
-    </div>
-    <div class="card-body">
-        {{#teachers.hasitems}}
-        <div class="list-group teachers-list-container teachers-scrollable">
-            {{#teachers.items}}
-            <div class="list-group-item">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        {{{picture}}}
-                    </div>
-                    <div class="flex-grow-1">
-                        <h6 class="mb-1">{{fullname}}</h6>
-                        <p class="mb-1 small">
-                            {{#pix}}t/email, core{{/pix}} {{email}}
-                        </p>
-                        {{#hasphone}}
-                        <p class="mb-1 small">
-                            <i class="icon fa fa-phone"></i> {{phone}}
-                        </p>
-                        {{/hasphone}}
-                        <p class="mb-0 small">
-                            {{#pix}}i/course{{/pix}} {{courseslist}}
-                        </p>
+    </div> -->
+
+    <div class="card-body p-0">
+
+        {{#activities.hasitems}}
+        <div class="teachers-grid-wrap teachers-list-container teachers-scrollable">
+            <div class="row row-cols-2 row-cols-xl-3 g-3">
+
+                {{#activities.items}}
+                <div class="col">
+                    <div class="teacher-card">
+
+                        <div class="mb-4">{{{picture}}}</div>
+
+                        <div class="teacher-name">{{fullname}}</div>
+
+                        <div class="teacher-meta-list">
+
+                            <span class="meta-chip">
+                                <i class="bi bi-envelope-fill"></i>
+                                {{email}}
+                            </span>
+
+                            {{#hasphone}}
+                            <span class="meta-chip">
+                                <i class="bi bi-telephone-fill"></i>
+                                {{phone}}
+                            </span>
+                            {{/hasphone}}
+
+                            <span class="meta-chip course-chip">
+                                {{#pix}}i/course{{/pix}}
+                                {{courseslist}}
+                            </span>
+
+                        </div>
+
+                        <div class="my-3">
+                            <a href="mailto:{{email}}" class="btn-mail border rounded-pill p-2 mx-1">
+                                <i class="bi bi-envelope"></i> Contact
+                            </a>
+                            <a href="" class="btn-msg border rounded-pill p-2 mx-1">
+                                <i class="bi bi-chat"></i> message
+                            </a>
+                        </div>
+
                     </div>
                 </div>
+                {{/activities.items}}
+
             </div>
-            {{/teachers.items}}
         </div>
-        {{/teachers.hasitems}}
-        {{^teachers.hasitems}}
-        <p class="text-muted">{{#str}}noteachers, block_customdashboard{{/str}}</p>
-        {{/teachers.hasitems}}
+        {{/activities.hasitems}}
+
+        {{^activities.hasitems}}
+        <div class="empty-state">
+            <i class="bi bi-person-x"></i>
+            <p>{{#str}}noteachers, block_customdashboard{{/str}}</p>
+        </div>
+        {{/activities.hasitems}}
+
     </div>
 </div>
+{{#js}}
+let msgs = document.querySelectorAll('.btn-msg');
+
+if (msgs.length) {
+    msgs.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            let card = btn.closest('.teacher-card');
+            if (!card) return;
+
+            let nameEl = card.querySelector('.teacher-name');
+            if (!nameEl) return;
+
+            let name = nameEl.textContent.trim();
+
+            let toggle = document.querySelector('[data-region="popover-region-messages"] .popover-region-toggle');
+            if (!toggle) return;
+
+            toggle.click();
+
+            let searchBox = document.querySelector('input[data-region="view-overview-search-input"]');
+            let searchBox2 = document.querySelector('input[data-region="search-input"]');
+            let button = document.querySelector('button[data-action="search"]');
+
+            if (searchBox) {
+                searchBox.focus();
+                searchBox.click();
+                searchBox2.value = name;
+                searchBox2.dispatchEvent(new Event('input', { bubbles: true }));
+                button.click();
+                const container = document.querySelector('[data-region="non-contacts-container"]');
+
+                if (!container) return;
+
+                const observer = new MutationObserver(() => {
+                    let contact = container.querySelector('a[data-route="view-conversation"]');
+
+                    if (contact) {
+                        console.log(contact);
+                        contact.click();
+                        observer.disconnect();
+                    }
+                });
+
+                observer.observe(container, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+        });
+    });
+}
+{{/js}}
