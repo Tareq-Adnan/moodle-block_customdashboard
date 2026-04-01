@@ -16,23 +16,24 @@ along with Moodle. If not, see
 <http: //www.gnu.org/licenses />.
 }}
 {{!
-@template block_customdashboard/teachers-card
+@template block_customdashboard/teachers-card_parent
 
-Reusable teachers Card component.
+Reusable Teachers Card component.
 
 Context variables required for this template:
-* activities - Object with activities data
+* teachers - Object with teachers data
 }}
 
-<div class="activities-widget mb-4">
+
+<div class="teachers-widget mb-4">
 
     <div class="card border-0">
         <div class="card-body p-3">
 
-            {{#activities.hasitems}}
+            {{#teachers.hasitems}}
             <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-4">
 
-                {{#activities.items}}
+                {{#teachers.items}}
                 <div class="col">
                     <div class="card teacher-card border rounded- overflow-hidden h-100 d-flex flex-column">
 
@@ -97,19 +98,19 @@ Context variables required for this template:
                         </div>
                     </div>
                 </div>
-                {{/activities.items}}
+                {{/teachers.items}}
 
             </div>
-            {{/activities.hasitems}}
+            {{/teachers.hasitems}}
 
-            {{^activities.hasitems}}
+            {{^teachers.hasitems}}
             <div class="text-center py-5 text-muted">
                 <i class="bi bi-person-x fs-1"></i>
                 <p class="mt-2 mb-0">
-                    {{#str}}noactivities, block_customdashboard{{/str}}
+                    {{#str}}noteachers, block_customdashboard{{/str}}
                 </p>
             </div>
-            {{/activities.hasitems}}
+            {{/teachers.hasitems}}
 
         </div>
     </div>

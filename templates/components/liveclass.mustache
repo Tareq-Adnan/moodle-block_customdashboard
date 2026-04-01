@@ -24,41 +24,37 @@ Example context (json):
 {
 }
 }}
-<a href="{{activityurl}}" target="_blank"
-    class="card h-100 border-0 shadow-sm rounded zoom-class-item-card transition-all"
-    data-timestamp="{{starttimestamp}}" style="text-decoration: none; color: inherit;">
-    <div class="card-accent-line"></div>
-    <div class="card-body p-4 d-flex flex-column">
-        <div class="d-flex justify-content-between align-items-start mb-3">
-            <span class="badge rounded-pill badge-soft-theme px-3 py-2">
-                {{#pix}}i/course, core{{/pix}} {{coursename}}
-            </span>
-            <div class="live-indicator">
+
+<div class="col">
+    <div class="hw-card">
+        <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <div class="hw-icon icon-asgn">{{#pix}}i/course, core{{/pix}}</div>
+                <div class="overflow-hidden">
+                    <p class="hw-course">{{coursename}}</p>
+                    <p class="hw-title"> {{name}}</p>
+                </div>
+            </div>
+            <div class="block_cudb-live-indicator">
                 <span class="dot bg-success"></span>
                 <span class="text-success small fw-bold">{{status}}</span>
             </div>
         </div>
-
-        <h5 class="card-title fw-bold text-dark mb-4 line-height-base">
-            {{name}}
-        </h5>
-
-        <div class="mt-auto">
-            <div class="info-box mb-4 p-3 rounded bg-faded-theme">
-                <div class="d-flex align-items-center mb-2 small fw-semibold">
-                    <span class="me-2 opacity-75">{{#pix}}i/calendar, core{{/pix}}</span>
-                    <span>{{starttime}}</span>
-                </div>
-                <div class="d-flex align-items-center small fw-semibold">
-                    <span class="me-2 opacity-75">{{#pix}}e/insert_time, core{{/pix}}</span>
-                    <span>{{duration}} {{#str}}minutes, block_customdashboard{{/str}}</span>
-                </div>
+        <hr class="hw-divider" />
+        <div class="info-box mb-4 p-3 rounded bg-faded-theme">
+            <div class="d-flex align-items-center mb-2 small fw-semibold">
+                <span class="me-2 opacity-75">{{#pix}}i/calendar, core{{/pix}}</span>
+                <span>{{starttime}}</span>
             </div>
-
-            <button class="btn btn-theme w-100 rounded-pill fw-bold py-2 shadow-sm"
-                onclick="event.preventDefault(); window.open('{{joinurl}}', '_blank');">
-                <i class="fa fa-play-circle me-2"></i>{{action}}
-            </button>
+            <div class="d-flex align-items-center small fw-semibold">
+                <span class="me-2 opacity-75">{{#pix}}e/insert_time, core{{/pix}}</span>
+                <span>{{duration}} {{#str}}minutes, block_customdashboard{{/str}}</span>
+            </div>
         </div>
+        {{^parent}}
+        <button class="hw-btn hw-btn-" onclick="event.preventDefault(); window.open('{{joinurl}}', '_blank');">
+            <i class="fa fa-play-circle me-2"></i>{{action}}
+        </button>
+        {{/parent}}
     </div>
-</a>
+</div>

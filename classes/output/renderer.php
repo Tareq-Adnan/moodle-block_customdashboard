@@ -63,17 +63,18 @@ class renderer extends plugin_renderer_base {
 
         // Get courses for selected child.
         $courses = $this->get_child_courses($selectedchildid);
-
+        // echo "<pre>";
+        // var_dump( self::get_zoom_classes($selectedchildid, 'student'));die;
         $data = [
-            'children' => $childrenoptions,
-            'haschildren' => !empty($childrenoptions),
-            'courses' => $courses,
+            'children'   => $childrenoptions,
+            'haschildren'=> !empty($childrenoptions),
+            'courses'    => $courses,
             'hascourses' => !empty($courses),
-            'isparent' => true,
-            'zoomclasses' => $this->get_zoom_classes($selectedchildid, 'student'),
-            'teachers' => self::get_student_teachers($selectedchildid),
-            'buttonlabel' => 'join',
-            'canclickzoom' => false,
+            'isparent'   => true,
+            'activities' => self::get_zoom_classes($selectedchildid, 'student'),
+            'teachers'   => self::get_student_teachers($selectedchildid),
+            'buttonlabel'  => 'join',
+            'parent' => true,
         ];
 
         // Initialize JavaScript module.
@@ -637,12 +638,13 @@ class renderer extends plugin_renderer_base {
                 continue;
             }
 
-            $gradeitem = grade_item::fetch([
-                'itemtype' => 'mod',
-                'itemmodule' => $cm->modname,
-                'iteminstance' => $cm->instance,
-                'courseid' => $course->id,
-            ]);
+        $gradeitem = grade_item::fetch([
+            'itemtype'     => 'mod',
+            'itemmodule'   => $cm->modname,
+            'iteminstance' => $cm->instance,
+            'itemnumber'   => 0,
+            'courseid'     => $course->id,
+        ]);
 
             if ($gradeitem) {
                 $grade = new grade_grade(['itemid' => $gradeitem->id, 'userid' => $userid]);
