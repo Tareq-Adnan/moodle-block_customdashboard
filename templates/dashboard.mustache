@@ -1,28 +1,29 @@
 {{!
-    This file is part of Moodle - http://moodle.org/
+This file is part of Moodle - http://moodle.org/
 
-    Moodle is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+Moodle is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    Moodle is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+Moodle is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with Moodle. If not, see
+<http: //www.gnu.org/licenses />.
 }}
 {{!
-    @template block_customdashboard/dashboard
+@template block_customdashboard/dashboard
 
-    Custom Dashboard block template.
+Custom Dashboard block template.
 
-    Context variables required for this template:
-    * isparent - Boolean if user is parent
-    * isstudent - Boolean if user is student
-    * isteacher - Boolean if user is teacher
+Context variables required for this template:
+* isparent - Boolean if user is parent
+* isstudent - Boolean if user is student
+* isteacher - Boolean if user is teacher
 }}
 
 <div class="block-customdashboard">
@@ -36,17 +37,19 @@
             <option value="{{id}}" {{#selected}}selected{{/selected}}>{{fullname}} ({{email}})</option>
             {{/children}}
         </select>
-        <a href="#" id="view-child-profile" class="btn btn-sm btn-primary" title="{{#str}}viewchildprofile, block_customdashboard{{/str}}">
+        <a href="#" id="view-child-profile" class="btn btn-sm btn-primary"
+            title="{{#str}}viewchildprofile, block_customdashboard{{/str}}">
             {{#pix}}i/user, core{{/pix}} {{#str}}viewdetails, block_customdashboard{{/str}}
         </a>
     </div>
 
     {{! Zoom classes and Teachers sections for selected child }}
     <div class="row mt-3">
+        <h4 class="mt-4 bg-secondary p-3 rounded">Live Classes</h4>
         <div class="">
             {{> block_customdashboard/zoom-classes-card }}
         </div>
-
+        <h4 class="mt-4 bg-secondary p-3 rounded">Teachers</h4>
         <div class="">
             {{> block_customdashboard/teachers-card_parent }}
         </div>
@@ -54,7 +57,7 @@
 
     {{#hascourses}}
     <div class="courses-container">
-        <h4 class="mb-3">{{#str}}childcourses, block_customdashboard{{/str}}</h4>
+        <h4 class="mb-3 bg-secondary p-3 rounded">{{#str}}childcourses, block_customdashboard{{/str}}</h4>
         {{> block_customdashboard/view-cards }}
     </div>
     {{/hascourses}}
@@ -73,7 +76,7 @@
     <div class="student-dashboard">
         <div class="row">
             <div class="">
-            {{> block_customdashboard/announcements}}
+                {{> block_customdashboard/announcements}}
             </div>
         </div>
         <div class="row">
@@ -82,9 +85,9 @@
             </div>
         </div>
         <div class="row">
-        <div class="">
-        {{> block_customdashboard/course-activities-card }}
-        </div>
+            <div class="">
+                {{> block_customdashboard/course-activities-card }}
+            </div>
         </div>
     </div>
     {{/isstudent}}

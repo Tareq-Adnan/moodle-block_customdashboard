@@ -183,6 +183,7 @@ class renderer extends plugin_renderer_base {
             'notice' => new moodle_url('/blocks/customdashboard/activities.php', ['type' => constants::CUDB_MODULE_TYPE_NOTICE]),
             'communication' => new moodle_url('/blocks/customdashboard/activities.php', ['type' => constants::CUDB_MODULE_TYPE_COMMUNICATION]),
             'liveclassess' => new moodle_url('/blocks/customdashboard/activities.php', ['type' => constants::CUDB_MODULE_TYPE_LIVECLASS]),
+            'classschedule' => new moodle_url('/blocks/customdashboard/activities.php', ['type' => constants::CUDB_MODULE_TYPE_CLASS_SCHEDULE]),
         ];
 
         // Step 5: Initialize JavaScript module

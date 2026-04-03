@@ -33,7 +33,7 @@ class block_customdashboard extends block_base {
      * Initialize the block.
      */
     public function init() {
-        $this->title = get_string('pluginname', 'block_customdashboard');
+        $this->title = get_string('title', 'block_customdashboard');
     }
 
     /**

@@ -31,6 +31,7 @@ class constants {
     public const CUDB_MODULE_TYPE_ACTIVITY = 4;
     public const CUDB_MODULE_TYPE_NOTICE = 5;
     public const CUDB_MODULE_TYPE_COMMUNICATION = 6;
+    public const CUDB_MODULE_TYPE_CLASS_SCHEDULE = 7;
     
     // Headings array
     public const HEADINGS = [
@@ -41,6 +42,7 @@ class constants {
         self::CUDB_MODULE_TYPE_ACTIVITY      => "Course Activity",
         self::CUDB_MODULE_TYPE_NOTICE        => "Notice Board",
         self::CUDB_MODULE_TYPE_COMMUNICATION => "Communications and Support",
+        self::CUDB_MODULE_TYPE_CLASS_SCHEDULE => "Class Schedule",
     ];
 
     public const TEMPLATES = [
@@ -51,5 +53,6 @@ class constants {
         self::CUDB_MODULE_TYPE_LIVECLASS       => 'block_customdashboard/zoom-classes-card',
         self::CUDB_MODULE_TYPE_ACTIVITY        => 'block_customdashboard/homework',
         self::CUDB_MODULE_TYPE_COMMUNICATION   => 'block_customdashboard/teachers-card',
+        self::CUDB_MODULE_TYPE_CLASS_SCHEDULE  => 'block_customdashboard/class-schedule',
     ];
 }

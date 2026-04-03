@@ -23,6 +23,7 @@
  */
 
 $string['pluginname'] = 'Custom Dashboard';
+$string['title'] = 'Learning Hub';
 $string['customdashboard:addinstance'] = 'Add a new Custom Dashboard block';
 $string['customdashboard:myaddinstance'] = 'Add a new Custom Dashboard block to Dashboard';
 $string['configtitle'] = 'Block title';
