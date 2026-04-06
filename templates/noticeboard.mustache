@@ -40,7 +40,7 @@ Example context (json):
     </div>
 
     <div class="block_cudb-notices-grid">
-    {{#activities.notices}}
+        {{#activities.notices}}
         <div class="block_cudb-notice-card">
             <div class="block_cudb-card-content">
                 <div class="block_cudb-course-chip">{{course}}</div>
@@ -49,11 +49,9 @@ Example context (json):
                 <a href="{{url}}" class="hw-btn" target="_blank">View details</a>
             </div>
         </div>
-    {{/activities.notices}}
-
-    {{^activities.notices}}
-        <div class="block_cudb-notice-card">No announcements or notices are published.</div>
-    {{/activities.notices}}
+        {{/activities.notices}}
     </div>
-
+    {{^activities.notices}}
+    <div class="block_cudb-notice-card p-3 text-center">No announcements or notices are published.</div>
+    {{/activities.notices}}
 </div>
