@@ -24,6 +24,70 @@ Example context (json):
 {
 }
 }}
-<div style="height: 100dvh;">
-<div class="p-4 text-center border rounded shadow-sm">No Schedule added</div>
+
+<div class="dashboard my-3">
+    <!-- Editable Schedule Container (No Shadow) -->
+    {{#activities.isteacher}}
+    <div class="schedule-container border">
+        <div class="toolbar border">
+            <div class="tool-group">
+                <button id="addRowAboveBtn" title="Add Row Above">➕ Row Above</button>
+                <button id="addRowBelowBtn">➕ Row Below</button>
+                <button id="delRowBtn">🗑️ Row</button>
+            </div>
+            <div class="tool-group">
+                <button id="addColLeftBtn">📌 Col Left</button>
+                <button id="addColRightBtn">📌 Col Right</button>
+                <button id="delColBtn">❌ Col</button>
+            </div>
+            <div class="tool-group">
+                <button id="saveManualBtn">💾 Save</button>
+                <button id="loadBtn">📂 Load</button>
+                <button id="exportJsonBtn" hidden>📎 Export JSON</button>
+                <button id="importJsonBtn" hidden>📥 Import JSON</button>
+            </div>
+            <div class="tool-group">
+                <button id="clearAllBtn">🧹 Clear All</button>
+                <button id="resetDefaultBtn">🔄 Reset Default</button>
+                <button id="weekToggleBtn">📅 5-Day/7-Day</button>
+            </div>
+            <div class="tool-group">
+                <input type="text" id="searchInput" placeholder="🔍 Search text..."
+                    style="border-radius:2rem; border:1px solid #ccc; padding:0.3rem 1rem;">
+                    <button id="clearSearchBtn">✖️</button>
+                </div>
+            <div class="tool-group">
+                <select name="course" class="form-select rounded-pill" id="courseSelect">
+                    {{#activities.course}}
+                    <option value="{{id}}">{{fullname}}</option>
+                    {{/activities.course}}
+                    <!-- Options will be populated dynamically -->
+                </select>
+            </div>
+        </div>
+        <div class="status-bar"><span id="statusMsg">✅ Ready</span><span id="selectionInfo"></span></div>
+
+        <div class="sheet-container">
+            <div class="grid-wrapper" id="gridWrapper">
+                <table class="schedule-grid" id="scheduleGrid">
+                    <thead id="tableHeader"></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {{/activities.isteacher}}
+    <!-- Display Container - Read Only, For Future Use (Shows real-time schedule data) -->
+    <div class="display-container">
+
+        <div class="display-content" id="displayContent">
+            <div class="schedule-summary" id="scheduleSummary">
+            </div>
+        </div>
+    </div>
 </div>
+{{#js}}
+require(['block_customdashboard/class_schedule'], function(amdModule) {
+amdModule.init({{activities.isteacher}}, {{{activities.coursesdata}}});
+});
+{{/js}}

@@ -41,4 +41,12 @@ $capabilities = [
             'manager' => CAP_PREVENT,
         ],
     ],
+    'block/customdashboard:save_schedule' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => [
+            'editingteacher' => CAP_PREVENT,
+            'manager' => CAP_PREVENT,
+        ],
+    ],
 ];

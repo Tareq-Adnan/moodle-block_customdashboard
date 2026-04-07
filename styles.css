@@ -964,3 +964,390 @@
     font-weight: 700;
     color: var(--text-muted);
 }
+
+/* Class Schedule */
+
+#page-blocks-customdashboard-activities {
+    .dashboard {
+        max-width: 1600px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    /* Editable Schedule Container - No Shadow */
+    .schedule-container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(0px);
+        border-radius: 1.5rem;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.2s;
+    }
+
+    body.dark .schedule-container {
+        background: rgba(30, 40, 55, 0.95);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Display Container - Read Only, Future Use */
+    .display-container {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
+        backdrop-filter: blur(10px);
+        border-radius: 1.5rem;
+        padding: 1.25rem;
+        /* border: 2px solid rgba(255, 215, 0, 0.5); */
+        /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); */
+        background-color: #764ba2;
+        min-height: 600px;
+    }
+
+    body.dark .display-container {
+        background: linear-gradient(135deg, rgba(40, 50, 70, 0.9), rgba(30, 40, 60, 0.95));
+        border-color: rgba(255, 200, 50, 0.6);
+    }
+
+    .display-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #ffd966;
+    }
+
+    .display-header h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .display-content {
+        overflow-y: auto;
+        padding: 0.5rem;
+    }
+
+    .schedule-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .summary-card {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+        border-left: 4px solid #667eea;
+        transition: transform 0.2s;
+    }
+
+    body.dark .summary-card {
+        background: rgba(50, 60, 80, 0.8);
+    }
+
+    .summary-card:hover {
+        transform: translateX(5px);
+    }
+
+    .summary-time {
+        font-weight: bold;
+        color: #667eea;
+        font-size: 0.8rem;
+    }
+
+    .summary-day {
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+    }
+
+    .summary-text {
+        font-size: 0.85rem;
+        color: #555;
+        margin-top: 0.25rem;
+        white-space: pre-wrap;
+    }
+
+    body.dark .summary-text {
+        color: #ccc;
+    }
+
+    /* Toolbar Styling */
+    .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: rgba(250, 250, 252, 0.8);
+        border-radius: 1rem;
+        margin-bottom: 1rem;
+        align-items: center;
+    }
+
+    body.dark .toolbar {
+        background: rgba(20, 30, 45, 0.8);
+    }
+
+    .tool-group {
+        display: flex;
+        gap: 0.4rem;
+        background: rgba(0, 0, 0, 0.05);
+        padding: 0.2rem 0.7rem;
+        border-radius: 2rem;
+        flex-wrap: wrap;
+    }
+
+    button {
+        background: #ffffff;
+        border: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: 2rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 0.8rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        background: #f8f9fa;
+    }
+
+    button:active {
+        transform: scale(0.97);
+    }
+
+    .danger-btn {
+        background: #ffe1df;
+        color: #b91c1c;
+    }
+
+    .danger-btn:hover {
+        background: #ffc9c5;
+    }
+
+    .primary-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .primary-btn:hover {
+        opacity: 0.9;
+    }
+
+    .status-bar {
+        background: rgba(102, 126, 234, 0.15);
+        padding: 0.4rem 1rem;
+        border-radius: 2rem;
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* Grid Styles */
+    .sheet-container {
+        position: relative;
+        overflow-x: auto;
+        border-radius: 1rem;
+        background: #f8fafc;
+    }
+
+    body.dark .sheet-container {
+        background: #1e2a36;
+    }
+
+    .grid-wrapper {
+        overflow: auto;
+        max-height: 55vh;
+        border-radius: 1rem;
+        scroll-behavior: smooth;
+    }
+
+    .schedule-grid {
+        border-collapse: collapse;
+        min-width: 600px;
+        font-size: 0.85rem;
+    }
+
+    th,
+    td {
+        border: 1px solid #cbd5e1;
+        padding: 0;
+        min-width: 130px;
+        position: relative;
+    }
+
+    body.dark th,
+    body.dark td {
+        border-color: #4a5a70;
+    }
+
+    th {
+        background: #f1f5f9;
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        padding: 10px 6px;
+        text-align: center;
+    }
+
+    body.dark th {
+        background: #2d3e4e;
+        color: #eef2ff;
+    }
+
+    .time-col {
+        background: #f8fafc;
+        font-weight: 500;
+        text-align: center;
+        position: sticky;
+        left: 0;
+        z-index: 5;
+        background-color: #eef2ff;
+        cursor: pointer;
+    }
+
+    body.dark .time-col {
+        background-color: #2a3a44;
+    }
+
+    .cell-content {
+        min-height: 65px;
+        padding: 8px 6px;
+        outline: none;
+        word-break: break-word;
+        white-space: pre-wrap;
+        cursor: text;
+        background: inherit;
+        font-size: 0.8rem;
+        line-height: 1.3;
+    }
+
+    td .cell-content[contenteditable="true"]:focus {
+        background: #fff9e0;
+        box-shadow: inset 0 0 0 2px #3b82f6;
+    }
+
+    body.dark td .cell-content[contenteditable="true"]:focus {
+        background: #3a5a6e;
+    }
+
+    .selected-cell {
+        outline: 2px solid #2563eb;
+        outline-offset: -1px;
+        background-color: rgba(37, 99, 235, 0.15);
+    }
+
+    .comment-badge {
+        position: absolute;
+        bottom: 2px;
+        right: 4px;
+        font-size: 12px;
+        opacity: 0.7;
+        cursor: help;
+    }
+
+    .context-menu {
+        position: fixed;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        padding: 0.5rem 0;
+        z-index: 1000;
+        min-width: 160px;
+    }
+
+    body.dark .context-menu {
+        background: #1e2a36;
+        color: white;
+    }
+
+    .context-menu div {
+        padding: 6px 18px;
+        cursor: pointer;
+        transition: 0.1s;
+    }
+
+    .context-menu div:hover {
+        background: #e2e8f0;
+    }
+
+    body.dark .context-menu div:hover {
+        background: #2d3e4e;
+    }
+
+    .search-highlight {
+        background-color: #fde047;
+        color: #1e293b;
+    }
+
+    /* Time Picker Modal */
+    .time-picker-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+    }
+
+    .time-picker-content {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        min-width: 280px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    body.dark .time-picker-content {
+        background: #2d3e4e;
+    }
+
+    .time-picker-content h4 {
+        margin-bottom: 1rem;
+    }
+
+    .time-picker-content input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .time-picker-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+
+    @media (max-width: 780px) {
+        .toolbar {
+            gap: 0.3rem;
+        }
+
+        button {
+            padding: 0.2rem 0.6rem;
+            font-size: 0.7rem;
+        }
+
+        th,
+        td {
+            min-width: 100px;
+        }
+    }
+}

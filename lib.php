@@ -78,3 +78,32 @@ function block_customdashboard_coursemodule_edit_post_actions($formdata, $course
     }
     return $formdata;
 }
+
+
+/**
+ * Extends the course navigation with a link to the Cursive writing report.
+ * This function adds a navigation node to access writing reports if the user has appropriate permissions
+ * and Cursive is enabled for the course.
+ *
+ * @param navigation_node $navigation The navigation node to extend
+ * @param stdClass $course The course object containing the course details
+ * @return void
+ * @throws moodle_exception If there is an error creating the navigation node
+ */
+function block_customdashboard_extend_navigation_course(\navigation_node $navigation, \stdClass $course) {
+    global $CFG;
+
+    $url     = new moodle_url('/blocks/customdashboard/activities.php', ['type' => constants::CUDB_MODULE_TYPE_CLASS_SCHEDULE, 'course' => $course->id]);
+
+    if (has_capability('moodle/course:update', context_course::instance($course->id))) {
+        $context = context_course::instance($course->id);
+        $navigation->add(
+            get_string('schedule', 'block_customdashboard'),
+            $url,
+            navigation_node::TYPE_SETTING,
+            null,
+            null,
+            new pix_icon('e/insert_date', "icon")
+        );
+    }
+}

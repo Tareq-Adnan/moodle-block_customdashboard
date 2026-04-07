@@ -74,6 +74,8 @@ class activity {
             case constants::CUDB_MODULE_TYPE_ASSESSMENT:
             case constants::CUDB_MODULE_TYPE_ACTIVITY:
                 return $this->get_user_activities($USER->id);
+            case constants::CUDB_MODULE_TYPE_CLASS_SCHEDULE:
+                return $this->get_student_schedule($USER->id);
             default:
                 return [];
         }
@@ -299,5 +301,22 @@ class activity {
             ];
         }
         return [];
+    }
+
+    private function get_student_schedule($userid) {
+        global $DB;
+        $isteacher = is_siteadmin($userid) || has_capability('moodle/course:update', context_system::instance(), $userid);
+        $courseid = optional_param('course', 0, PARAM_INT);
+        if ($isteacher && $courseid) {
+            $courses = [get_course($courseid)];
+        } else {
+            $courses = enrol_get_my_courses('id, fullname');
+        }
+
+        return [
+            'course' => $courses ?? "",
+            'coursesdata' => json_encode(array_values($courses)) ?? "",
+            'isteacher' => $isteacher,
+        ];
     }
 }
