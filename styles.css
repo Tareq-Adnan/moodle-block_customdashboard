@@ -986,11 +986,6 @@
         transition: all 0.2s;
     }
 
-    body.dark .schedule-container {
-        background: rgba(30, 40, 55, 0.95);
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-
     /* Display Container - Read Only, Future Use */
     .display-container {
         background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
@@ -1001,11 +996,6 @@
         /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); */
         background-color: #764ba2;
         min-height: 600px;
-    }
-
-    body.dark .display-container {
-        background: linear-gradient(135deg, rgba(40, 50, 70, 0.9), rgba(30, 40, 60, 0.95));
-        border-color: rgba(255, 200, 50, 0.6);
     }
 
     .display-header {
@@ -1033,7 +1023,7 @@
 
     .schedule-summary {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 0.75rem;
     }
 
@@ -1043,10 +1033,6 @@
         padding: 0.75rem;
         border-left: 4px solid #667eea;
         transition: transform 0.2s;
-    }
-
-    body.dark .summary-card {
-        background: rgba(50, 60, 80, 0.8);
     }
 
     .summary-card:hover {
@@ -1072,10 +1058,6 @@
         white-space: pre-wrap;
     }
 
-    body.dark .summary-text {
-        color: #ccc;
-    }
-
     /* Toolbar Styling */
     .toolbar {
         display: flex;
@@ -1088,10 +1070,6 @@
         align-items: center;
     }
 
-    body.dark .toolbar {
-        background: rgba(20, 30, 45, 0.8);
-    }
-
     .tool-group {
         display: flex;
         gap: 0.4rem;
@@ -1101,7 +1079,7 @@
         flex-wrap: wrap;
     }
 
-    button {
+    .tool-group button, .time-picker-modal button {
         background: #ffffff;
         border: none;
         padding: 0.4rem 0.9rem;
@@ -1112,14 +1090,16 @@
         font-size: 0.8rem;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
-
-    button:hover {
+    .time-picker-modal .primary-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+    .tool-group button:hover, .time-picker-modal button:hover {
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        background: #f8f9fa;
     }
 
-    button:active {
+    .tool-group button:active {
         transform: scale(0.97);
     }
 
@@ -1159,10 +1139,6 @@
         background: #f8fafc;
     }
 
-    body.dark .sheet-container {
-        background: #1e2a36;
-    }
-
     .grid-wrapper {
         overflow: auto;
         max-height: 55vh;
@@ -1184,11 +1160,6 @@
         position: relative;
     }
 
-    body.dark th,
-    body.dark td {
-        border-color: #4a5a70;
-    }
-
     th {
         background: #f1f5f9;
         font-weight: 600;
@@ -1197,11 +1168,6 @@
         z-index: 10;
         padding: 10px 6px;
         text-align: center;
-    }
-
-    body.dark th {
-        background: #2d3e4e;
-        color: #eef2ff;
     }
 
     .time-col {
@@ -1213,10 +1179,6 @@
         z-index: 5;
         background-color: #eef2ff;
         cursor: pointer;
-    }
-
-    body.dark .time-col {
-        background-color: #2a3a44;
     }
 
     .cell-content {
@@ -1234,10 +1196,6 @@
     td .cell-content[contenteditable="true"]:focus {
         background: #fff9e0;
         box-shadow: inset 0 0 0 2px #3b82f6;
-    }
-
-    body.dark td .cell-content[contenteditable="true"]:focus {
-        background: #3a5a6e;
     }
 
     .selected-cell {
@@ -1265,11 +1223,6 @@
         min-width: 160px;
     }
 
-    body.dark .context-menu {
-        background: #1e2a36;
-        color: white;
-    }
-
     .context-menu div {
         padding: 6px 18px;
         cursor: pointer;
@@ -1278,10 +1231,6 @@
 
     .context-menu div:hover {
         background: #e2e8f0;
-    }
-
-    body.dark .context-menu div:hover {
-        background: #2d3e4e;
     }
 
     .search-highlight {
@@ -1312,9 +1261,6 @@
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
 
-    body.dark .time-picker-content {
-        background: #2d3e4e;
-    }
 
     .time-picker-content h4 {
         margin-bottom: 1rem;
@@ -1340,7 +1286,7 @@
             gap: 0.3rem;
         }
 
-        button {
+        .tool-group button, .time-picker-modal button  {
             padding: 0.2rem 0.6rem;
             font-size: 0.7rem;
         }

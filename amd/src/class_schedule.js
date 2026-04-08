@@ -80,7 +80,6 @@ export const init = (isTeacher, courseids) => {
         }
         applyAllStylesFromMap();
         renderGrid();
-        updateDisplayPanel();
         pushUndoState();
         if (!isTeacher) {
             loadFromLocal();
@@ -112,7 +111,7 @@ export const init = (isTeacher, courseids) => {
             <h4>✏️ Edit Time Slot</h4>
             <input type="time" id="timePickerInput" value="${convertToTimeInput(rowHeaders[rowIndex])}" step="60">
             <div class="time-picker-buttons">
-            <button id="timePickerCancel">Cancel</button>
+            <button id="timePickerCancel" class="border">Cancel</button>
             <button id="timePickerConfirm" class="primary-btn">Update</button>
             </div>
         </div>
@@ -150,7 +149,7 @@ export const init = (isTeacher, courseids) => {
             <h4> Load Existing Schedule</h4>
             <p> Do you want to load existing schedule data if available? </p>
             <div class="time-picker-buttons">
-            <button id="DefaultCancel">Cancel</button>
+            <button id="DefaultCancel" class="border" >Cancel</button>
             <button id="DefaultConfirm" class="primary-btn">Load</button>
             </div>
         </div>
@@ -202,16 +201,15 @@ export const init = (isTeacher, courseids) => {
 
         let items = getItems();
 
-
         if (items.length === 0) {
             summaryContainer.innerHTML =
                 '<div class = "text-center p-2">📭 No scheduled classes yet.</div>';
             return;
         }
 
+        summaryContainer.className = "schedule-summary";
         if (isTeacher) {
             summaryContainer.innerHTML = `
-                <div class="schedule-summary">
                     ${items
                     .map(
                         (item) => `
@@ -223,17 +221,16 @@ export const init = (isTeacher, courseids) => {
                     `,
                     )
                     .join("")}
-                </div>
                 `;
         } else {
 
-            if (courseids.length !== Object.keys(scheduleStudentData).length) return;
             let html = '';
             summaryContainer.innerHTML = '';
+            
             items.forEach((courseItems, idx) => {
                 let course = courseids.find(c => c.id == idx);
-
-                html += ` <h6 class="my-3">Course: ${course.fullname}</h6>
+                if (courseItems.length === 0 || document.getElementById('course-'+idx)) return;
+                html += ` <h6 class="my-3" id="course-${idx}">Course: ${course.fullname}</h6>
                 <div class= "schedule-summary">
                             ${courseItems
                         .map(
@@ -503,7 +500,6 @@ export const init = (isTeacher, courseids) => {
         scheduleData.splice(index, 0, newRow);
         renderGrid();
         pushUndoState();
-        autoSaveToLocal();
     }
     function deleteSelectedRow() {
         if (selectedRow >= 0 && rowHeaders.length > 1) {
@@ -511,7 +507,6 @@ export const init = (isTeacher, courseids) => {
             scheduleData.splice(selectedRow, 1);
             renderGrid();
             pushUndoState();
-            autoSaveToLocal();
         }
     }
     function addColLeft() {
@@ -528,7 +523,6 @@ export const init = (isTeacher, courseids) => {
         for (let row of scheduleData) row.splice(idx, 0, { text: "", style: {} });
         renderGrid();
         pushUndoState();
-        autoSaveToLocal();
     }
     function deleteSelectedCol() {
         if (selectedCol >= 0 && colHeaders.length > 1) {
@@ -536,7 +530,6 @@ export const init = (isTeacher, courseids) => {
             for (let row of scheduleData) row.splice(selectedCol, 1);
             renderGrid();
             pushUndoState();
-            autoSaveToLocal();
         }
     }
     function unmergeCell() {
@@ -656,22 +649,26 @@ export const init = (isTeacher, courseids) => {
     }
 
     function loadFromLocal() {
-        for (const course of courseids) {
-            getSchedule(course.id);
-        }
+        const promises = courseids.map(course => getSchedule(course.id));
+        
+        Promise.all(promises).then(() => {
+            updateDisplayPanel(); // render ONLY once after all data loaded
+        });
     }
 
     function getSchedule(courseid) {
-        getData([
+        return getData([
             {
                 methodname: "block_cudb_get_schedule",
-                args: {
-                    courseid: courseid,
-                },
+                args: { courseid }
             },
         ])[0]
             .then((res) => {
+                if (!res?.content) {
+                    return;
+                }
                 let state = JSON.parse(res?.content);
+
                 if (isTeacher) {
                     scheduleData = state.scheduleData;
                     rowHeaders = state.rowHeaders;
@@ -680,15 +677,15 @@ export const init = (isTeacher, courseids) => {
                     cellComments = new Map(state.cellComments);
                     cellStyles = new Map(state.cellStyles);
                     weekMode = state.weekMode;
+
                     renderGrid();
                     updateStatus("Loaded from storage");
                 } else {
                     scheduleStudentData[courseid] = state.scheduleData;
-                    updateDisplayPanel();
                     updateStatus("Schedule loaded");
                 }
             })
-            .catch((e) => {
+            .catch(() => {
                 updateStatus("Corrupted data");
             });
     }
@@ -742,7 +739,6 @@ export const init = (isTeacher, courseids) => {
                 scheduleData[i][j].text = "";
         renderGrid();
         pushUndoState();
-        autoSaveToLocal();
     }
     function toggleWeek() {
         weekMode = weekMode === 5 ? 7 : 5;
