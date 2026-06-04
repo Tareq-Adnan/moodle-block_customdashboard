@@ -39,7 +39,6 @@ use grade_item;
  * Renderer class for Custom Dashboard block.
  */
 class renderer extends plugin_renderer_base {
-
     /**
      * Render the parent dashboard content.
      *
@@ -48,7 +47,7 @@ class renderer extends plugin_renderer_base {
      * @return string HTML content
      */
     public function render_parent_dashboard($children, $selectedchildid) {
-        global $DB, $PAGE;
+        global $DB;
 
         // Prepare children for selector.
         $childrenoptions = [];
@@ -67,7 +66,7 @@ class renderer extends plugin_renderer_base {
         // var_dump( self::get_zoom_classes($selectedchildid, 'student'));die;
         $data = [
             'children'   => $childrenoptions,
-            'haschildren'=> !empty($childrenoptions),
+            'haschildren' => !empty($childrenoptions),
             'courses'    => $courses,
             'hascourses' => !empty($courses),
             'isparent'   => true,
@@ -78,8 +77,8 @@ class renderer extends plugin_renderer_base {
         ];
 
         // Initialize JavaScript module.
-        $PAGE->requires->js_call_amd('block_customdashboard/selector', 'init');
-        $PAGE->requires->js_call_amd('block_customdashboard/modals', 'init');
+        $this->page->requires->js_call_amd('block_customdashboard/selector', 'init');
+        $this->page->requires->js_call_amd('block_customdashboard/modals', 'init');
 
         return $this->render_from_template('block_customdashboard/dashboard', $data);
     }
@@ -91,45 +90,44 @@ class renderer extends plugin_renderer_base {
      * @return string HTML content
      */
     // public function render_student_dashboard($userid) {
-    //     global $PAGE;
-    //     // Get all courses the student is enrolled in
-    //     $courses = enrol_get_users_courses($userid, true, ['id', 'fullname']);
+    // global $PAGE;
+    // Get all courses the student is enrolled in
+    // $courses = enrol_get_users_courses($userid, true, ['id', 'fullname']);
 
     // // Prepare courses data for Mustache
-    //     $courseitems = [];
-    //     foreach ($courses as $course) {
-    //         $courseitems[] = [
-    //             'id' => $course->id,
-    //             'fullname' => format_string($course->fullname),
-    //         ];
-    //     }
+    // $courseitems = [];
+    // foreach ($courses as $course) {
+    // $courseitems[] = [
+    // 'id' => $course->id,
+    // 'fullname' => format_string($course->fullname),
+    // ];
+    // }
 
-    //     $data = [
-    //         'isstudent' => true,
-    //         'zoomclasses' => $this->get_zoom_classes($userid, 'student'),
-    //         'teachers' => $this->get_student_teachers($userid),
-    //         'buttonlabel' => 'join',
-    //         'canclickzoom' => true,
-    //         'courses' => $courseitems,
-    //         'hascourses' => !empty($courseitems),
-    //     ];
+    // $data = [
+    // 'isstudent' => true,
+    // 'zoomclasses' => $this->get_zoom_classes($userid, 'student'),
+    // 'teachers' => $this->get_student_teachers($userid),
+    // 'buttonlabel' => 'join',
+    // 'canclickzoom' => true,
+    // 'courses' => $courseitems,
+    // 'hascourses' => !empty($courseitems),
+    // ];
 
-    //     // Initialize JavaScript module.
-    //     $PAGE->requires->js_call_amd('block_customdashboard/selector', 'init');
+    // Initialize JavaScript module.
+    // $PAGE->requires->js_call_amd('block_customdashboard/selector', 'init');
 
-    //     return $this->render_from_template('block_customdashboard/dashboard', $data);
+    // return $this->render_from_template('block_customdashboard/dashboard', $data);
     // }
 
     public function render_student_dashboard($userid) {
         global $PAGE, $DB;
 
         $courses = enrol_get_users_courses($userid, true, ['id', 'fullname']);
-        
-        //fetch course activities
+
+        // fetch course activities
         $courseactivities = [];
 
         foreach ($courses as $i => $course) {
-            
             $cms = $DB->get_records_sql("
                 SELECT cm.id AS cmid, m.name AS modname, cm.instance
                 FROM {course_modules} cm
@@ -547,8 +545,10 @@ class renderer extends plugin_renderer_base {
             if ($completion->is_enabled($cm) != COMPLETION_TRACKING_NONE) {
                 $total++;
                 $completiondata = $completion->get_data($cm, false, $userid);
-                if ($completiondata->completionstate == COMPLETION_COMPLETE ||
-                    $completiondata->completionstate == COMPLETION_COMPLETE_PASS) {
+                if (
+                    $completiondata->completionstate == COMPLETION_COMPLETE ||
+                    $completiondata->completionstate == COMPLETION_COMPLETE_PASS
+                ) {
                     $completed++;
                 }
             }
@@ -639,13 +639,13 @@ class renderer extends plugin_renderer_base {
                 continue;
             }
 
-        $gradeitem = grade_item::fetch([
+            $gradeitem = grade_item::fetch([
             'itemtype'     => 'mod',
             'itemmodule'   => $cm->modname,
             'iteminstance' => $cm->instance,
             'itemnumber'   => 0,
             'courseid'     => $course->id,
-        ]);
+            ]);
 
             if ($gradeitem) {
                 $grade = new grade_grade(['itemid' => $gradeitem->id, 'userid' => $userid]);
@@ -719,7 +719,7 @@ class renderer extends plugin_renderer_base {
         }
 
         $roleids = array_keys($teacherroles);
-        list($insql, $params) = $DB->get_in_or_equal($roleids);
+        [$insql, $params] = $DB->get_in_or_equal($roleids);
         $params[] = $coursecontext->id;
 
         $instructors = $DB->get_records_sql(
@@ -774,7 +774,7 @@ class renderer extends plugin_renderer_base {
         $courseids = array_keys($courses);
 
         if ($role === 'teacher') {
-            $courseids = array_filter($courseids, function($cid) use ($userid) {
+            $courseids = array_filter($courseids, function ($cid) use ($userid) {
                 $context = context_course::instance($cid);
                 return has_capability('mod/zoom:addinstance', $context, $userid);
             });
@@ -784,7 +784,7 @@ class renderer extends plugin_renderer_base {
             }
         }
 
-        list($insql, $params) = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED);
+        [$insql, $params] = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED);
 
         $params['start'] = $startRange;
         $params['end'] = $endRange;
@@ -818,11 +818,10 @@ class renderer extends plugin_renderer_base {
         $grouped = [
             'today' => [],
             'upcoming' => [],
-            'ended' => []
+            'ended' => [],
         ];
 
         foreach ($events as $event) {
-
             $start = (int)$event->timestart;
             $end = $start + (int)$event->duration;
 
@@ -830,7 +829,7 @@ class renderer extends plugin_renderer_base {
 
             if ($start >= $todaystart && $start <= $todayend) {
                 $bucket = 'today';
-            } elseif ($start > $todayend) {
+            } else if ($start > $todayend) {
                 $bucket = 'upcoming';
             } else {
                 $bucket = 'ended';
@@ -838,14 +837,14 @@ class renderer extends plugin_renderer_base {
 
             if ($canjoin) {
                 $status = 'Live';
-            } elseif ($now < $start) {
+            } else if ($now < $start) {
                 $status = 'Scheduled';
             } else {
                 $status = 'Ended';
             }
 
             $activityurl = (new moodle_url('/mod/zoom/view.php', [
-                'id' => $event->cmid
+                'id' => $event->cmid,
             ]))->out(false);
 
             $grouped[$bucket][] = [
@@ -878,7 +877,7 @@ class renderer extends plugin_renderer_base {
             'today' => [],
             'upcoming' => [],
             'ended' => [],
-            'hasitems' => false
+            'hasitems' => false,
         ];
     }
 
@@ -897,59 +896,43 @@ class renderer extends plugin_renderer_base {
             return ['items' => [], 'hasitems' => false];
         }
 
-        $teachersdata = [];
         $uniqueteachers = [];
 
         foreach ($courses as $course) {
             $coursecontext = context_course::instance($course->id);
 
-            // Get teacher and editing teacher roles.
-            $teacherroles = $DB->get_records_sql(
-                "SELECT id FROM {role} WHERE archetype IN ('manager', 'editingteacher', 'teacher')"
-            );
-
-            if (empty($teacherroles)) {
-                continue;
-            }
-
-            $roleids = array_keys($teacherroles);
-            list($insql, $params) = $DB->get_in_or_equal($roleids);
-            $params[] = $coursecontext->id;
-
-            $teachers = $DB->get_records_sql(
-                "SELECT DISTINCT u.id, u.firstname, u.lastname, u.email, u.phone2, u.picture, u.imagealt,
-                        u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename
-                 FROM {user} u
-                 JOIN {role_assignments} ra ON ra.userid = u.id
-                 WHERE ra.roleid $insql AND ra.contextid = ?
-                 ORDER BY u.lastname, u.firstname",
-                $params
-            );
+            // Get all users with teaching capability in this course.
+            $teachers = get_enrolled_users($coursecontext, 'moodle/course:update');
 
             foreach ($teachers as $teacher) {
                 if (!isset($uniqueteachers[$teacher->id])) {
                     $uniqueteachers[$teacher->id] = [
-                        'id' => $teacher->id,
-                        'fullname' => fullname($teacher),
-                        'email' => $teacher->email,
-                        'phone' => !empty($teacher->phone2) ? $teacher->phone2 : '',
-                        'hasphone' => !empty($teacher->phone2),
-                        'picture' => $OUTPUT->user_picture($teacher, ['size' => 50, 'link' => false]),
-                        'courses' => [],
+                    'id'       => $teacher->id,
+                    'fullname' => fullname($teacher),
+                    'email'    => $teacher->email,
+                    'phone'    => $teacher->phone2 ?? '',
+                    'hasphone' => !empty($teacher->phone2),
+                    'picture'  => $OUTPUT->user_picture($teacher, ['size' => 50, 'link' => false]),
+                    'courses'  => [],
                     ];
                 }
-                $uniqueteachers[$teacher->id]['courses'][] = format_string($course->fullname);
+
+                $coursename = format_string($course->fullname);
+                if (!in_array($coursename, $uniqueteachers[$teacher->id]['courses'])) {
+                    $uniqueteachers[$teacher->id]['courses'][] = $coursename;
+                }
             }
         }
 
+        $teachersdata = [];
         foreach ($uniqueteachers as $teacher) {
             $teacher['courseslist'] = implode(', ', $teacher['courses']);
             $teachersdata[] = $teacher;
         }
 
         return [
-            'items' => $teachersdata,
-            'hasitems' => !empty($teachersdata),
+        'items'    => $teachersdata,
+        'hasitems' => !empty($teachersdata),
         ];
     }
 }

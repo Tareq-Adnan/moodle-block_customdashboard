@@ -28,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  * Custom Dashboard block class.
  */
 class block_customdashboard extends block_base {
-
     /**
      * Initialize the block.
      */
@@ -137,7 +136,7 @@ class block_customdashboard extends block_base {
      */
     private function get_user_role() {
         global $USER, $DB, $CFG;
-        
+
         require_once($CFG->dirroot . '/local/parentmanager/lib.php');
 
         // Check if user is a parent.
@@ -147,24 +146,24 @@ class block_customdashboard extends block_base {
 
         // Check if user has teacher or manager role in any course.
         $systemcontext = \context_system::instance();
-        
+
         // Get teacher and manager roles.
         $teacherroles = $DB->get_records_sql(
             "SELECT id FROM {role} WHERE archetype IN ('editingteacher', 'teacher', 'manager')"
         );
-        
+
         if (!empty($teacherroles)) {
             $roleids = array_keys($teacherroles);
-            list($insql, $params) = $DB->get_in_or_equal($roleids);
+            [$insql, $params] = $DB->get_in_or_equal($roleids);
             $params[] = $USER->id;
-            
+
             $hasteacherrole = $DB->record_exists_sql(
                 "SELECT 1 FROM {role_assignments} ra
                  JOIN {context} ctx ON ra.contextid = ctx.id
                  WHERE ra.roleid $insql AND ra.userid = ? AND ctx.contextlevel = ?",
                 array_merge($params, [CONTEXT_COURSE])
             );
-            
+
             if ($hasteacherrole) {
                 return 'teacher';
             }
@@ -174,16 +173,16 @@ class block_customdashboard extends block_base {
         $studentroles = $DB->get_records('role', ['archetype' => 'student']);
         if (!empty($studentroles)) {
             $roleids = array_keys($studentroles);
-            list($insql, $params) = $DB->get_in_or_equal($roleids);
+            [$insql, $params] = $DB->get_in_or_equal($roleids);
             $params[] = $USER->id;
-            
+
             $hasstudentrole = $DB->record_exists_sql(
                 "SELECT 1 FROM {role_assignments} ra
                    JOIN {context} ctx ON ra.contextid = ctx.id
                   WHERE ra.roleid $insql AND ra.userid = ? AND ctx.contextlevel = ?",
                 array_merge($params, [CONTEXT_COURSE])
             );
-            
+
             if ($hasstudentrole) {
                 return 'student';
             }

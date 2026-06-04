@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026040800;
+$plugin->version   = 2026040900;
 $plugin->requires  = 2025040800;
 $plugin->component = 'block_customdashboard';
 $plugin->maturity  = MATURITY_STABLE;
