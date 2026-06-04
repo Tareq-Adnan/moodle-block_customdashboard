@@ -230,7 +230,7 @@ class renderer extends plugin_renderer_base {
 
         $data = [
             'isteacher' => true,
-            'zoomclasses' => $this->get_zoom_classes($userid, 'teacher'),
+            'activities' => $this->get_zoom_classes($userid, 'teacher'),
             'buttonlabel' => 'startjoin',
             'canclickzoom' => true,
         ];
